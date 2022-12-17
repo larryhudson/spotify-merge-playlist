@@ -1,4 +1,4 @@
-import cheerio from "npm:cheerio";
+import cheerio from "https://esm.sh/cheerio";
 
 export default async function (request, context) {
   const genres = await import("./generated/genres.json", {

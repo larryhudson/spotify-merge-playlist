@@ -122,6 +122,6 @@ export default async function (request, context) {
   }
 
   createPlaylist(`🤖 ${playlistName}`, allUniqueTracks);
-
+  
   // delete the cookie
 }
