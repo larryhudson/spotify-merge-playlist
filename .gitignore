@@ -1,3 +1,5 @@
 node_modules
 package-lock.json
 11ty-output
+# Local Netlify folder
+.netlify

@@ -1,2 +1,49 @@
 [build]
     publish = '11ty-output'
+
+[[edge_functions]]
+  path = "/login"
+  function = "login"
+
+[[edge_functions]]
+  path = "/auth-redirect"
+  function = "login_redirect"
+
+[[edge_functions]]
+  path = "/callback"
+  function = "login_callback"
+
+[[edge_functions]]
+  path = "/playlists/create"
+  function = "playlist_create"
+
+[[edge_functions]]
+  path = "/top-genres"
+  function = "top_genres"
+
+[[edge_functions]]
+  path = "/logout"
+  function = "logout"
+
+[[edge_functions]]
+  path = "/playlist-for-genre"
+  function = "playlist_for_genre"
+
+[dev]
+  targetPort = 8082
+
+[[edge_functions]]
+  path = "/playlist-find-pulse-edge"
+  function = "playlist_find_pulse_edge"
+
+[[edge_functions]]
+  path = "/playlist-tracks"
+  function = "playlist_tracks"
+
+[[edge_functions]]
+  path = "/similar-genres"
+  function = "similar_genres"
+
+[[edge_functions]]
+  path = "/artists-for-genre"
+  function = "artists_for_genre"

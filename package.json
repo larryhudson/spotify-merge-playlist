@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@11ty/eleventy": "^2.0.0-canary.18"
+    "@11ty/eleventy": "^2.0.0-canary.18",
+    "@11ty/eleventy-fetch": "^3.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "petite-vue": "^0.4.1"
   }
 }

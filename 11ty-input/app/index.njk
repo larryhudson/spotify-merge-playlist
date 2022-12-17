@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>You're logged in!</h1>
+
+    <div v-scope>
+      <h2>Your top genres</h2>
+      <button @click="fetchTopGenres">Fetch top genres</button>
+      <div v-if="topGenres.length > 0">
+        <ul>
+          <li v-for="genre in genresToShow">
+            ${genre.name} (${genre.count} of your top artists)
+            <button @click="getSimilarGenres(genre.name)">
+              get similar genres
+            </button>
+            <button
+              v-if="!(chosenGenres.includes(genre.name))"
+              @click="chosenGenres.push(genre.name)"
+            >
+              choose this genre
+            </button>
+            <ul v-if="genre.name in similarGenres">
+              <li v-for="similarGenre in similarGenres[genre.name]">
+                ${similarGenre.name}
+                <span v-if="similarGenre.name in artistsForGenre"
+                  >(top artists:
+                  <span v-for="artist in artistsForGenre[similarGenre.name]"
+                    >${artist.name}, </span
+                  >)</span
+                >
+                <button
+                  v-if="!(similarGenre.name in artistsForGenre)"
+                  @click="getArtistsForGenre(similarGenre.name)"
+                >
+                  get example artists
+                </button>
+                <button
+                  v-if="!(chosenGenres.includes(similarGenre.name))"
+                  @click="chosenGenres.push(similarGenre.name)"
+                >
+                  choose this genre
+                </button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <button
+          v-if="showingMoreGenres === false"
+          @click="showingMoreGenres = true"
+        >
+          Show more...
+        </button>
+      </div>
+
+      <h2>Chosen genres</h2>
+      <div v-if="chosenGenres.length > 0">
+        <ul>
+          <li v-for="genre in chosenGenres">
+            ${genre}
+            <button
+              @click="chosenGenres = chosenGenres.filter(g => g !== genre)"
+            >
+              remove
+            </button>
+          </li>
+        </ul>
+      </div>
+      <h2>Choose which playlists you want</h2>
+
+      <p v-for="playlistType in playlistTypes">
+        <input
+          type="checkbox"
+          @change="togglePlaylistType(playlistType.name)"
+          :checked="chosenPlaylistTypes.includes(playlistType.name)"
+        />
+        ${playlistType.name} - ${playlistType.description}
+      </p>
+
+      <button @click="getChosenPlaylistIds">Get playlist IDs</button>
+
+      <h2>Name your playlist</h2>
+
+      <form method="POST" action="/playlists/create">
+        <label
+          >Playlist name
+          <input type="text" name="name" />
+        </label>
+        <br />
+
+        <textarea name="ids">
+        ${playlistIdsString}
+      </textarea
+        >
+
+        <br />
+
+        <button>Create playlist</button>
+      </form>
+    </div>
+
+    <script type="module">
+      async function fetchTopGenres() {
+        const genres = await fetch("/top-genres").then((r) => r.json());
+        console.log({ genres });
+        this.topGenres = genres;
+      }
+
+      async function getSimilarGenres(genre) {
+        console.log("should be getting similar genres for", genre);
+
+        const enaoUrl = `/similar-genres?genre=${genre}`;
+        console.log({ enaoUrl });
+
+        const similarGenres = await fetch(enaoUrl).then((r) => r.json());
+        console.log({ similarGenres });
+        this.similarGenres[genre] = similarGenres;
+      }
+
+      async function getArtistsForGenre(genre) {
+        const enaoUrl = `/artists-for-genre?genre=${genre}`;
+        console.log({ enaoUrl });
+
+        const exampleArtists = await fetch(enaoUrl).then((r) => r.json());
+        this.artistsForGenre[genre] = exampleArtists;
+        console.log(this.artistsForGenre);
+      }
+
+      async function getChosenPlaylistIds() {
+        const genreNames = this.chosenGenres;
+        const chosenPlaylistTypes = this.chosenPlaylistTypes;
+
+        async function getPlaylistsForGenre(genreName, types) {
+          const playlists = await fetch(
+            `/playlist-find-pulse-edge?genre=${genreName}`
+          ).then((r) => r.json());
+          console.log(playlists);
+
+          return playlists.filter((p) => types.includes(p.label));
+        }
+
+        const playlistIdArrays = await Promise.all(
+          genreNames.map((genreName) =>
+            getPlaylistsForGenre(genreName, chosenPlaylistTypes)
+          )
+        );
+
+        this.chosenPlaylistIds = playlistIdArrays.flat().map((p) => p.id);
+      }
+
+      async function togglePlaylistType(type) {
+        if (this.chosenPlaylistTypes.includes(type)) {
+          this.chosenPlaylistTypes = this.chosenPlaylistTypes.filter(
+            (t) => t !== type
+          );
+        } else {
+          this.chosenPlaylistTypes.push(type);
+        }
+      }
+
+      import { createApp } from "/petite-vue.es.js";
+      createApp({
+        topGenres: [],
+        showingMoreGenres: false,
+        similarGenres: {},
+        getSimilarGenres,
+        artistsForGenre: {},
+        getArtistsForGenre,
+        get genresToShow() {
+          if (this.showingMoreGenres) {
+            return this.topGenres;
+          } else {
+            return this.topGenres.slice(0, 10);
+          }
+        },
+        chosenGenres: [],
+        fetchTopGenres,
+        chosenPlaylistTypes: [],
+        togglePlaylistType,
+        getChosenPlaylistIds,
+        chosenPlaylistIds: [],
+        get playlistIdsString() {
+          return this.chosenPlaylistIds.join("\n");
+        },
+        playlistTypes: [
+          {
+            name: "Sound",
+            description: "Songs new and old that define the genre",
+          },
+          {
+            name: "Pulse",
+            description: "What fans of the genre are listening to now",
+          },
+          {
+            name: "Edge",
+            description:
+              "Recently released music that fans of the genre are checking out",
+          },
+          {
+            name: "2022",
+            description: "Music from the genre that came out in 2022",
+          },
+        ],
+        $delimiters: ["${", "}"],
+      }).mount();
+    </script>
+  </body>
+</html>
