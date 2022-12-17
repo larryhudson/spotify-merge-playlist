@@ -1,13 +1,12 @@
 import cheerio from "https://esm.sh/cheerio";
+import { readJson } from "https://deno.land/std/fs/mod.ts";
 
 export default async function (request, context) {
-  const genresJson = await import("./generated/genres.json", {
-    assert: { type: "json" },
-  });
+  const genresJson = await readJson("./generated/genres.json");
 
   const genreName = new URL(request.url).searchParams.get("genre");
 
-  const foundGenre = genresJson.default.find((g) => g.name === genreName);
+  const foundGenre = genresJson.find((g) => g.name === genreName);
 
   // fetch the ENAO page with artists
   const everyNoiseHtml = await fetch(
