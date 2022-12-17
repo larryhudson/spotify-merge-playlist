@@ -117,11 +117,12 @@ export default async function (request, context) {
 
         tracksToAdd = tracksToAdd.slice(100);
       }
+    }
 
-      //   add the tracks to the playlist
+    //   add the tracks to the playlist
   }
 
   createPlaylist(`🤖 ${playlistName}`, allUniqueTracks);
-  
+
   // delete the cookie
 }
