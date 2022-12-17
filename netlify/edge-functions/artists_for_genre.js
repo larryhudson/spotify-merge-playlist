@@ -1,9 +1,7 @@
 import cheerio from "https://esm.sh/cheerio";
-import { readJson } from "https://deno.land/std/fs/mod.ts";
+import genresJson from "./generated/genres.json" assert { type: "json" };
 
 export default async function (request, context) {
-  const genresJson = await readJson("./generated/genres.json");
-
   const genreName = new URL(request.url).searchParams.get("genre");
 
   const foundGenre = genresJson.find((g) => g.name === genreName);

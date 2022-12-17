@@ -1,11 +1,9 @@
-import { readJson } from "https://deno.land/std/fs/mod.ts";
+import genresJson from "./generated/genres.json" assert { type: "json" };
 
-export default async function (request, context) {
-  const genres = await readJson("./generated/genres.json");
-
+export default function (request, context) {
   const genreName = new URL(request.url).searchParams.get("genre");
 
-  const foundGenre = genres.find((g) => g.name === genreName);
+  const foundGenre = genresJson.find((g) => g.name === genreName);
 
   return context.json(foundGenre);
 }
