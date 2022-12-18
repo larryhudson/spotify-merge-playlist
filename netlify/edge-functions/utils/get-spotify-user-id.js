@@ -7,6 +7,7 @@ export async function getSpotifyUserId({ spotifyAccessToken }) {
 
   if (spotifyResponse.ok) {
     const responseJson = await spotifyResponse.json();
+    console.log(responseJson);
     return responseJson.id;
   }
 }

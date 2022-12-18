@@ -33,8 +33,6 @@ export default async function (request, context) {
         spotifyAccessToken,
       });
 
-      console.log(playlistData);
-
       return {
         playlistId,
         name: playlistData.name,

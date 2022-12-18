@@ -8,15 +8,9 @@ export default async function (request, context) {
   const SPOTIFY_CLIENT_ID = Deno.env.get("SPOTIFY_CLIENT_ID");
   const SPOTIFY_CLIENT_SECRET = Deno.env.get("SPOTIFY_CLIENT_SECRET");
 
-  console.log({ SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET });
-
   const authString = `Basic ${btoa(
     SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET
   )}`;
-
-  console.log({ toEncode: SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET });
-
-  console.log({ authString });
 
   const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
     body: new URLSearchParams({

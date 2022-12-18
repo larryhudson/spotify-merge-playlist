@@ -2,7 +2,7 @@
     publish = '11ty-output'
 
 [dev]
-  targetPort = 8084
+  targetPort = 8080
 
 [[edge_functions]]
   path = "/login"

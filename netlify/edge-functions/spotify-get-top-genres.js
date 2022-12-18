@@ -3,8 +3,6 @@ import genresJson from "./generated/genres.json" assert { type: "json" };
 export default async function (_request, context) {
   const spotifyAccessToken = context.cookies.get("spotify-access-token");
 
-  console.log({ spotifyAccessToken });
-
   async function getTopArtists() {
     const spotifyResponse = await fetch(
       "https://api.spotify.com/v1/me/top/artists?limit=50",
@@ -30,8 +28,6 @@ export default async function (_request, context) {
 
   try {
     const topArtists = await getTopArtists();
-
-    console.log(JSON.stringify(topArtists));
 
     const genres = topArtists.items.map((artist) => artist.genres).flat();
 

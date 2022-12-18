@@ -210,10 +210,17 @@
           </button>
 
           <div v-if="createdPlaylist">
-            <p>
-              Playlist created!
-              <a :href="createdPlaylist.url">View on Spotify</a>
-            </p>
+            <div v-if="'url' in createdPlaylist">
+              <p>
+                Playlist created!
+                <a :href="createdPlaylist.url">View on Spotify</a>
+              </p>
+            </div>
+
+            <div v-if="createdPlaylist.status == 'error'">
+              <p>Error while creating playlist:</p>
+              <pre>${JSON.stringify(createdPlaylist)}</pre>
+            </div>
           </div>
         </form>
       </div>
@@ -236,7 +243,6 @@
           window.location.href = "/?message=expired";
           return;
         }
-        console.log({ genres });
         this.topGenres = genres;
       }
 
