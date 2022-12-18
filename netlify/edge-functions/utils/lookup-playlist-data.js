@@ -1,6 +1,4 @@
 export async function lookupPlaylist({ playlistId, spotifyAccessToken }) {
-  throw "my errr!";
-
   const playlistJson = await fetch(
     `https://api.spotify.com/v1/playlists/${playlistId}`,
     {
