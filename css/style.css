@@ -1,0 +1,223 @@
+:root {
+}
+
+:root {
+  --blue-0: #d5e2f5;
+  --blue-1: #b7cced;
+  --blue-2: #99b7e6;
+  --blue-3: #7ba1df;
+  --blue-4: #5c8cd7;
+  --blue-5: #3e77d0;
+  --blue-6: #2c64bd;
+  --blue-7: #25549f;
+  --blue-8: #1e4582;
+  --blue-9: #173564;
+  --blue-10: #102546;
+  --blue-11: #091629;
+
+  --ink: var(--blue-0);
+  --paper: var(--blue-11);
+  --accent: var(--blue-6);
+
+  --border-color: var(--blue-3);
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  border-color: var(--border-color);
+  line-height: 1.6;
+}
+
+body.intro-page {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.intro-page li {
+  margin-bottom: 0.5rem;
+}
+
+.intro-page .login-link {
+  font-size: 1.25rem;
+  background-color: var(--blue-1);
+  color: var(--blue-11);
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.intro-page .login-link:hover {
+  background-color: var(--blue-5);
+  outline: 2px solid var(--blue-2);
+}
+
+.intro-page .login-link:active {
+  transform: scale(0.98);
+}
+
+h1 {
+  border-bottom: 4px solid var(--accent);
+  font-weight: 900;
+}
+
+h1 {
+  padding-bottom: 1rem;
+}
+
+.genres,
+.genres ul,
+.playlist-types {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.playlist-types {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.genres ul {
+  gap: 0.5rem;
+}
+
+.genres li,
+.playlist-types label {
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+}
+.genres .artist-count {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+}
+
+.genres .similar-container {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 0.5rem);
+  max-height: 200px;
+  overflow-y: scroll;
+  z-index: 2;
+  background-color: var(--blue-9);
+  padding: 0.5rem;
+  border-bottom: 2px solid var(--blue-0);
+}
+
+.genres .similar-container h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.genres li li {
+  background-color: var(--blue-10);
+  color: var(--ink);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+
+  --border-color: var(--blue-3);
+  border-color: var(--border-color);
+}
+
+.genres li li button:hover {
+  background-color: var(--blue-8);
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.main {
+  flex: 1 1 600px;
+}
+
+.sidebar {
+  flex: 0 1 400px;
+  position: sticky;
+  top: 0;
+  height: 600px;
+  padding: 1rem;
+}
+
+.sidebar iframe {
+  border: none;
+}
+
+button {
+  background-color: inherit;
+  color: inherit;
+  border-color: var(--border-color);
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 1px;
+
+  padding: 0.25rem;
+  margin: 0.25rem;
+}
+
+button:hover {
+  background-color: var(--blue-9);
+  color: var(--blue-0);
+}
+
+button:active {
+  background-color: var(--blue-7);
+}
+
+.genres li.chosen,
+.playlist-types label.chosen {
+  background-color: var(--blue-2);
+  color: var(--blue-11);
+
+  --border-color: var(--blue-11);
+}
+
+.toggle-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  font-size: 1rem;
+}
+
+a {
+  color: var(--ink);
+}
+
+h2 {
+  margin-top: 3rem;
+}
+
+.genre-name {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.chosen {
+  border-color: red;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+}
+
+.main h2:first-child {
+  margin-top: 0;
+}
+
+label p:last-child {
+  margin-bottom: 0;
+}

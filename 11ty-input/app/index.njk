@@ -5,113 +5,273 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>You're logged in!</h1>
+    <h1>discover-mix</h1>
 
-    <div v-scope>
-      <h2>Your top genres</h2>
-      <button @click="fetchTopGenres">Fetch top genres</button>
-      <div v-if="topGenres.length > 0">
-        <ul>
-          <li v-for="genre in genresToShow">
-            ${genre.name} (${genre.count} of your top artists)
-            <button @click="getSimilarGenres(genre.name)">
-              get similar genres
-            </button>
-            <button
-              v-if="!(chosenGenres.includes(genre.name))"
-              @click="chosenGenres.push(genre.name)"
+    <div class="wrapper" v-scope @vue:mounted="fetchTopGenres">
+      <div class="main">
+        <h2>1. Explore genres</h2>
+        <p>
+          Click '+ add' on the genres you're interested in. Click 'view in
+          sidebar' to get an idea of what is in each genre. Click 'explore
+          similar' to get a list of similar genres.
+        </p>
+        <h3>Your top genres, based on your top artists</h3>
+        <div v-if="topGenres.length > 0">
+          <ul class="genres">
+            <li
+              v-for="genre in genresToShow"
+              :class="{chosen: chosenGenres.includes(genre.name)}"
             >
-              choose this genre
-            </button>
-            <ul v-if="genre.name in similarGenres">
-              <li v-for="similarGenre in similarGenres[genre.name]">
-                ${similarGenre.name}
-                <span v-if="similarGenre.name in artistsForGenre"
-                  >(top artists:
-                  <span v-for="artist in artistsForGenre[similarGenre.name]"
-                    >${artist.name}, </span
-                  >)</span
-                >
-                <button
-                  v-if="!(similarGenre.name in artistsForGenre)"
-                  @click="getArtistsForGenre(similarGenre.name)"
-                >
-                  get example artists
-                </button>
-                <button
-                  v-if="!(chosenGenres.includes(similarGenre.name))"
-                  @click="chosenGenres.push(similarGenre.name)"
-                >
-                  choose this genre
-                </button>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <button
-          v-if="showingMoreGenres === false"
-          @click="showingMoreGenres = true"
-        >
-          Show more...
+              <span class="genre-name">${genre.name}</span>
+              <span
+                class="artist-count"
+                :title="`${genre.count} of your top artists`"
+                >${genre.count}×</span
+              >
+              <button
+                v-if="!(genre.name in similarGenres)"
+                @click="getSimilarGenres(genre.name)"
+              >
+                <span v-if="fetchingFor.includes(genre.name)">
+                  finding similar...
+                </span>
+                <span v-else>🌎 explore similar</span>
+              </button>
+              <button v-else @click="hideSimilarGenres(genre.name)">
+                × hide similar
+              </button>
+              <button
+                class="toggle-button"
+                @click="chosenGenres.push(genre.name)"
+                v-if="!(chosenGenres.includes(genre.name))"
+              >
+                + add
+              </button>
+              <button
+                class="toggle-button"
+                v-else
+                @click="chosenGenres = chosenGenres.filter(g => g !== genre.name)"
+              >
+                × remove
+              </button>
+              <button @click="previewPlaylist(genre.soundPlaylistId)">
+                🔎 view in sidebar
+              </button>
+
+              <div class="similar-container" v-if="genre.name in similarGenres">
+                <h4>similar to ${genre.name}</h4>
+                <ul>
+                  <li
+                    v-for="similarGenre in similarGenres[genre.name]"
+                    :class="{chosen: chosenGenres.includes(similarGenre.name)}"
+                  >
+                    <span class="genre-name"> ${similarGenre.name} </span>
+
+                    <span
+                      class="artist-count"
+                      v-if="topGenres.find(g => g.name === similarGenre.name)"
+                      :title="`${topGenres.find(g => g.name === similarGenre.name).count} of your top artists`"
+                    >
+                      ${topGenres.find(g => g.name ===
+                      similarGenre.name).count}×</span
+                    >
+
+                    <button
+                      @click="previewPlaylist(similarGenre.soundPlaylistId)"
+                    >
+                      view in sidebar
+                    </button>
+                    <button
+                      class="toggle-button"
+                      @click="chosenGenres.push(similarGenre.name)"
+                      v-if="!(chosenGenres.includes(similarGenre.name))"
+                    >
+                      + add
+                    </button>
+                    <button
+                      class="toggle-button"
+                      v-else
+                      @click="chosenGenres = chosenGenres.filter(g => g !== similarGenre.name)"
+                    >
+                      × remove
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <button
+            v-if="showingMoreGenres === false"
+            @click="showingMoreGenres = true"
+          >
+            Show more top genres
+          </button>
+        </div>
+
+        <h3>Chosen genres</h3>
+        <div v-if="chosenGenres.length > 0">
+          <ul>
+            <li v-for="genre in chosenGenres">
+              ${genre}
+              <button
+                @click="chosenGenres = chosenGenres.filter(g => g !== genre)"
+              >
+                × remove
+              </button>
+            </li>
+          </ul>
+        </div>
+        <p v-else>
+          You haven't chosen any genres yet. Check out your top genres and
+          explore similar genres above.
+        </p>
+        <h2>2. Choose which playlists you want</h2>
+
+        <p>
+          Tick the checkbox on the types of playlists you want to include in
+          your playlist.
+        </p>
+
+        <div class="playlist-types">
+          <label
+            v-for="(playlistType, index) in playlistTypes"
+            :class="{chosen: chosenPlaylistTypes.includes(playlistType.name)}"
+          >
+            <input
+              type="checkbox"
+              @change="togglePlaylistType(playlistType.name)"
+              :checked="chosenPlaylistTypes.includes(playlistType.name)"
+            />
+            <p><strong>${playlistType.name}</strong></p>
+            <p>${playlistType.description}</p>
+          </label>
+        </div>
+
+        <button @click="getPlaylistsToInclude" v-if="chosenGenres.length > 0">
+          Check which playlists will be included
         </button>
-      </div>
 
-      <h2>Chosen genres</h2>
-      <div v-if="chosenGenres.length > 0">
-        <ul>
-          <li v-for="genre in chosenGenres">
-            ${genre}
-            <button
-              @click="chosenGenres = chosenGenres.filter(g => g !== genre)"
-            >
-              remove
-            </button>
-          </li>
-        </ul>
-      </div>
-      <h2>Choose which playlists you want</h2>
+        <div v-if="playlistsToInclude.length > 0">
+          <p>Your playlist will include...</p>
 
-      <p v-for="playlistType in playlistTypes">
-        <input
-          type="checkbox"
-          @change="togglePlaylistType(playlistType.name)"
-          :checked="chosenPlaylistTypes.includes(playlistType.name)"
-        />
-        ${playlistType.name} - ${playlistType.description}
-      </p>
+          <ul>
+            <li v-for="playlist in playlistsToInclude">
+              <a
+                target="_blank"
+                :href="`spotify:playlist:${playlist.playlistId}`"
+                >${playlist.name} (${playlist.numTracks} tracks)</a
+              >
+              <button @click="previewPlaylist(playlist.playlistId)">
+                view in sidebar
+              </button>
+            </li>
+          </ul>
+        </div>
 
-      <button @click="getChosenPlaylistIds">Get playlist IDs</button>
+        <h2>3. Create your playlist</h2>
 
-      <h2>Name your playlist</h2>
+        <p>
+          Give your playlist a name and hit 'Create playlist'. This will create
+          a new playlist in your Spotify account.
+        </p>
 
-      <form method="POST" action="/playlists/create">
-        <label
-          >Playlist name
-          <input type="text" name="name" />
-        </label>
-        <br />
-
-        <textarea name="ids">
-        ${playlistIdsString}
-      </textarea
+        <form
+          method="POST"
+          id="playlist-form"
+          action="/create-playlist"
+          @submit.prevent="createPlaylist"
         >
+          <label
+            >Playlist name
+            <input type="text" name="name" />
+          </label>
 
-        <br />
+          <input
+            v-for="genre in chosenGenres"
+            type="hidden"
+            name="genre"
+            :value="genre"
+          />
 
-        <button>Create playlist</button>
-      </form>
+          <input
+            v-for="playlistType in chosenPlaylistTypes"
+            type="hidden"
+            name="playlist-type"
+            :value="playlistType"
+          />
+
+          <button>
+            <span v-if="!creatingPlaylist">Create playlist</span>
+            <span v-else>Creating playlist...</span>
+          </button>
+
+          <div v-if="createdPlaylist">
+            <p>
+              Playlist created!
+              <a :href="createdPlaylist.url">View on Spotify</a>
+            </p>
+          </div>
+        </form>
+      </div>
+      <div class="sidebar">
+        <h2>Playlist viewer</h2>
+        <div v-if="previewPlaylistId !== null">
+          <iframe
+            :src="`https://embed.spotify.com/?uri=spotify:playlist:${previewPlaylistId}`"
+            style="width: 100%; height: 600px"
+          ></iframe>
+        </div>
+        <p v-else>Click 'view in sidebar' on a genre to see it over here.</p>
+      </div>
     </div>
 
     <script type="module">
       async function fetchTopGenres() {
         const genres = await fetch("/top-genres").then((r) => r.json());
+        if (genres.error) {
+          window.location.href = "/?message=expired";
+          return;
+        }
         console.log({ genres });
         this.topGenres = genres;
       }
 
+      async function createPlaylist() {
+        const playlistForm = document.getElementById("playlist-form");
+
+        const formData = new FormData(playlistForm);
+
+        this.creatingPlaylist = true;
+
+        const createResponse = await fetch(
+          playlistForm.getAttribute("action"),
+          {
+            method: "POST",
+            body: formData,
+          }
+        ).then((r) => r.json());
+
+        if (createResponse.error) {
+          // handle error
+        }
+
+        this.createdPlaylist = createResponse;
+        this.creatingPlaylist = false;
+      }
+
+      function hideSimilarGenres(genre) {
+        console.log("should be deleting", genre);
+        delete this.similarGenres[genre];
+        console.log(this.similarGenres);
+      }
+
       async function getSimilarGenres(genre) {
+        this.fetchingFor = [...this.fetchingFor, genre];
+
         console.log("should be getting similar genres for", genre);
 
         const enaoUrl = `/similar-genres?genre=${genre}`;
@@ -120,6 +280,21 @@
         const similarGenres = await fetch(enaoUrl).then((r) => r.json());
         console.log({ similarGenres });
         this.similarGenres[genre] = similarGenres;
+
+        console.log("removing from fetching for");
+        this.fetchingFor = this.fetchingFor.filter((str) => str !== genre);
+      }
+
+      async function getPlaylistsToInclude() {
+        const form = document.getElementById("playlist-form");
+        const formData = new FormData(form);
+
+        const playlistsToInclude = await fetch(`/list-playlists-to-include`, {
+          body: formData,
+          method: "POST",
+        }).then((r) => r.json());
+
+        this.playlistsToInclude = playlistsToInclude;
       }
 
       async function getArtistsForGenre(genre) {
@@ -163,14 +338,27 @@
         }
       }
 
+      async function previewPlaylist(playlistId) {
+        this.previewPlaylistId = playlistId;
+      }
+
       import { createApp } from "/petite-vue.es.js";
       createApp({
+        fetchingFor: [],
         topGenres: [],
         showingMoreGenres: false,
         similarGenres: {},
         getSimilarGenres,
+        hideSimilarGenres,
         artistsForGenre: {},
         getArtistsForGenre,
+        playlistsToInclude: [],
+        previewPlaylist,
+        previewPlaylistId: null,
+        getPlaylistsToInclude,
+        createPlaylist,
+        creatingPlaylist: false,
+        createdPlaylist: null,
         get genresToShow() {
           if (this.showingMoreGenres) {
             return this.topGenres;
@@ -180,7 +368,7 @@
         },
         chosenGenres: [],
         fetchTopGenres,
-        chosenPlaylistTypes: [],
+        chosenPlaylistTypes: ["Sound"],
         togglePlaylistType,
         getChosenPlaylistIds,
         chosenPlaylistIds: [],
@@ -193,6 +381,11 @@
             description: "Songs new and old that define the genre",
           },
           {
+            name: "Intro",
+            description:
+              "An attempt at an algorithmic introduction to the genre",
+          },
+          {
             name: "Pulse",
             description: "What fans of the genre are listening to now",
           },
@@ -200,6 +393,11 @@
             name: "Edge",
             description:
               "Recently released music that fans of the genre are checking out",
+          },
+          {
+            name: "♀Filter",
+            description:
+              "An algorithmic attempt to find music in the genre made wholly or partly by women",
           },
           {
             name: "2022",

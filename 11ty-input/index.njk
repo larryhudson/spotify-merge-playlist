@@ -5,13 +5,60 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css"/>
   </head>
-  <body>
-    <h1>spotify-merge-playlist</h1>
+  <body class="intro-page">
+    <h1>discover-mix</h1>
+    <p>discover-mix is a tool that creates big Spotify playlists based on the algorithmic genre playlists created by
+      <a href="https://everynoise.com/">Every Noise at Once</a>. By choosing a few genres you are interested in, you can
+        create a huge playlist for shuffling, so you'll always have something new to listen to.</p>
+    <h2>How it works</h2>
+    <ol>
+      <li>You click 'Login with Spotify' and click 'allow' - this gives us permission to scan your top artists, and to create
+        a new playlist using your account</li>
+      <li>You explore your top genres, and similar genres, and add the ones you're interested in</li>
+      <li>You choose which type of playlist ('Sound', 'Pulse', ♀Filter, 'Edge', or '2022') you want included in your mega
+        playlist.</li>
+      <li>You name your playlist and click create. The tool will create a new playlist that includes all the tracks from the
+        relevant algorithmic playlists. It will create the playlist in your Spotify account, ready for you to shuffle.</li>
+    </ol>
+    <h2>Ready to get started?</h2>
+    <p>Click 'Login with Spotify' below to get started.</p>
     <p>
-      <a href="/login/">Login</a>
+      <a class="login-link" href="/login/">Login with Spotify</a>
     </p>
-    <p>Work in progress!</p>
-    {#  #}
+    <h2>What is Every Noise at Once?</h2>
+    <p>
+      <a href="https://everynoise.com">Every Noise at Once</a>
+      is a project started by
+      <a href="https://furia.com/">Glenn McDonald</a>
+      who works at Spotify. The playlist uses algorithms to categorise music on Spotify into micro-genres. It tracks what fans
+      of genres and listening to, and
+      <a href="https://everynoise.com/everynoise1d.cgi?root=indie%20rock&scope=all">plots genres on a map</a>, so we can see how similar certain genres are.</p>
+    <p>For each genre, the project also automatically generates a few Spotify playlists. For example, the genre 'indie rock'
+      has the following playlists:</p>
+    <ul>
+      <li>
+        <a href="https://open.spotify.com/playlist/4XXr357Jej7eUBh7XPK8hb">The Sound of Indie Rock</a>
+      </li>
+      <li>
+        <a href="https://open.spotify.com/playlist/6zj2ZyaP4WLzE5AhilyeX0">The Pulse of Indie Rock</a>
+      </li>
+      <li>
+        <a href="https://open.spotify.com/playlist/1Xf43rER49rVtWjinjP5fw">The Edge of Indie Rock</a>
+      </li>
+      <li>
+        <a href="https://open.spotify.com/playlist/6I7CIyQ9jh8fKWo07z9Czj">A ♀Filter for Indie Rock</a>
+      </li>
+      <li>
+        <a href="https://open.spotify.com/playlist/4IvGeVlcJB2ZcrTNtkpv8m">2022 in Indie Rock</a>
+      </li>
+    </ul>
+    <p>These playlists are updated all the time, so they are a great source of new music.</p>
+    <p>This tool, discover-mix, aims to make it easier to create playlists that incorporate these algorithmic playlists.</p>
+    <p>It uses data from the Every Noise at Once website to get the Spotify playlist links, and to explore similar genres
+      when you are looking at your top genres.</p>
+    <p>The Every Noise at Once website is an amazing resource for music fans - it demonstrates the sheer magnitude of music
+      available on Spotify, but also makes it possible to find music that is suited to your taste.</p>
   </body>
 </html>

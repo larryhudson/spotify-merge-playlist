@@ -28,10 +28,20 @@ export default async function (request, context) {
       const overlap = overlapStr.split(":").at(-1).trim();
       const distance = distanceStr.split(":").at(-1).trim();
 
+      const soundPlaylistId = $(rowTag)
+        .find("td")
+        .eq(1)
+        .find("a")
+        .first()
+        .attr("href")
+        .split(":")
+        .at(-1);
+
       genres.push({
         name,
         overlap,
         distance,
+        soundPlaylistId,
       });
     });
 

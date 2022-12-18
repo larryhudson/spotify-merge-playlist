@@ -1,49 +1,45 @@
 [build]
     publish = '11ty-output'
 
+[dev]
+  targetPort = 8084
+
 [[edge_functions]]
   path = "/login"
-  function = "login"
+  function = "auth-login-1-start"
 
 [[edge_functions]]
   path = "/auth-redirect"
-  function = "login_redirect"
+  function = "auth-login-2-redirect-to-spotify"
 
 [[edge_functions]]
   path = "/callback"
-  function = "login_callback"
+  function = "auth-login-3-callback"
 
 [[edge_functions]]
-  path = "/playlists/create"
-  function = "playlist_create"
-
-[[edge_functions]]
-  path = "/top-genres"
-  function = "top_genres"
+  path = "/app"
+  function = "auth-redirect-if-no-cookie"
 
 [[edge_functions]]
   path = "/logout"
-  function = "logout"
+  function = "auth-logout"
 
 [[edge_functions]]
-  path = "/playlist-for-genre"
-  function = "playlist_for_genre"
-
-[dev]
-  targetPort = 8082
+  path = "/create-playlist"
+  function = "spotify-create-playlist"
 
 [[edge_functions]]
-  path = "/playlist-find-pulse-edge"
-  function = "playlist_find_pulse_edge"
-
-[[edge_functions]]
-  path = "/playlist-tracks"
-  function = "playlist_tracks"
+  path = "/top-genres"
+  function = "spotify-get-top-genres"
 
 [[edge_functions]]
   path = "/similar-genres"
-  function = "similar_genres"
+  function = "enao-get-similar-genres"
 
 [[edge_functions]]
   path = "/artists-for-genre"
-  function = "artists_for_genre"
+  function = "enao-get-artists-for-genre"
+
+[[edge_functions]]
+  path = "/list-playlists-to-include"
+  function = "spotify-prepare-playlist-info"
