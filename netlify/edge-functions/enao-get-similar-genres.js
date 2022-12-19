@@ -18,11 +18,9 @@ export default async function (request, context) {
 
   const genres = [];
 
-  $("tr")
+  $("tr:not(.current)")
     .slice(0, 10)
     .each((i, rowTag) => {
-      if ($(rowTag).hasClass("current")) return;
-
       const name = $(rowTag).find("td").eq(2).find("a").first().text();
 
       const dataString = $(rowTag).find("td").eq(0).attr("title");
