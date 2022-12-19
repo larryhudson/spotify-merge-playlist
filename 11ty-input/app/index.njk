@@ -124,6 +124,92 @@
               </button>
             </li>
           </ul>
+          <h4>Find similar genres to your chosen ones</h4>
+          <button @click="getSimilarForChosen">Get similar genres</button>
+          <div v-if="similarGenresToChosen.length > 0">
+            <ul class="genres">
+              <li
+                v-for="genre in similarGenresToChosen"
+                :class="{chosen: chosenGenres.includes(genre.name)}"
+              >
+                <span class="genre-name">${genre.name}</span>
+                <!-- artist count should go here -->
+                <button
+                  v-if="!(genre.name in similarGenres)"
+                  @click="getSimilarGenres(genre.name)"
+                >
+                  <span v-if="fetchingFor.includes(genre.name)">
+                    finding similar...
+                  </span>
+                  <span v-else>🌎 explore similar</span>
+                </button>
+                <button v-else @click="hideSimilarGenres(genre.name)">
+                  × hide similar
+                </button>
+                <button
+                  class="toggle-button"
+                  @click="chosenGenres.push(genre.name)"
+                  v-if="!(chosenGenres.includes(genre.name))"
+                >
+                  + add
+                </button>
+                <button
+                  class="toggle-button"
+                  v-else
+                  @click="chosenGenres = chosenGenres.filter(g => g !== genre.name)"
+                >
+                  × remove
+                </button>
+                <button @click="previewPlaylist(genre.soundPlaylistId)">
+                  🔎 view in sidebar
+                </button>
+
+                <div
+                  class="similar-container"
+                  v-if="genre.name in similarGenres"
+                >
+                  <h4>similar to ${genre.name}</h4>
+                  <ul>
+                    <li
+                      v-for="similarGenre in similarGenres[genre.name]"
+                      :class="{chosen: chosenGenres.includes(similarGenre.name)}"
+                    >
+                      <span class="genre-name"> ${similarGenre.name} </span>
+
+                      <span
+                        class="artist-count"
+                        v-if="topGenres.find(g => g.name === similarGenre.name)"
+                        :title="`${topGenres.find(g => g.name === similarGenre.name).count} of your top artists`"
+                      >
+                        ${topGenres.find(g => g.name ===
+                        similarGenre.name).count}×</span
+                      >
+
+                      <button
+                        @click="previewPlaylist(similarGenre.soundPlaylistId)"
+                      >
+                        view in sidebar
+                      </button>
+                      <button
+                        class="toggle-button"
+                        @click="chosenGenres.push(similarGenre.name)"
+                        v-if="!(chosenGenres.includes(similarGenre.name))"
+                      >
+                        + add
+                      </button>
+                      <button
+                        class="toggle-button"
+                        v-else
+                        @click="chosenGenres = chosenGenres.filter(g => g !== similarGenre.name)"
+                      >
+                        × remove
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
         <p v-else>
           You haven't chosen any genres yet. Check out your top genres and
@@ -291,6 +377,20 @@
         this.fetchingFor = this.fetchingFor.filter((str) => str !== genre);
       }
 
+      async function getSimilarForChosen() {
+        const searchParams = new URLSearchParams();
+
+        this.chosenGenres.forEach((genre) => {
+          searchParams.append("genre", genre);
+        });
+
+        const enaoUrl = `/similar-genres?${searchParams.toString()}`;
+
+        const similarGenres = await fetch(enaoUrl).then((r) => r.json());
+        console.log({ similarGenres });
+        this.similarGenresToChosen = similarGenres;
+      }
+
       async function getPlaylistsToInclude() {
         const form = document.getElementById("playlist-form");
         const formData = new FormData(form);
@@ -356,6 +456,8 @@
         similarGenres: {},
         getSimilarGenres,
         hideSimilarGenres,
+        similarGenresToChosen: [],
+        getSimilarForChosen,
         artistsForGenre: {},
         getArtistsForGenre,
         playlistsToInclude: [],

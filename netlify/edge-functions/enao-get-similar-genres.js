@@ -1,19 +1,22 @@
 import cheerio from "https://esm.sh/cheerio";
-import genresJson from "./generated/genres.json" assert { type: "json" };
 
 export default async function (request, context) {
-  const genreName = new URL(request.url).searchParams.get("genre");
+  const genreNames = new URL(request.url).searchParams.getAll("genre");
 
-  const foundGenre = genresJson.find((g) => g.name === genreName);
+  const everyNoiseParams = new URLSearchParams({
+    scope: "all",
+  });
+
+  genreNames.forEach((genre) => everyNoiseParams.append("root", genre));
 
   // fetch the ENAO page with sorted genres
   const everyNoiseHtml = await fetch(
-    `https://everynoise.com/everynoise1d.cgi?root=${foundGenre.name}&scope=all`
+    `https://everynoise.com/everynoise1d.cgi?${everyNoiseParams.toString()}`
   ).then((r) => r.text());
 
   const $ = cheerio.load(everyNoiseHtml);
 
-  let genres = [];
+  const genres = [];
 
   $("tr")
     .slice(0, 10)
