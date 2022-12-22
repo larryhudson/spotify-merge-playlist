@@ -3,6 +3,7 @@
 
 [dev]
   targetPort = 8080
+  command = "npx @11ty/eleventy --watch --serve"
 
 [[edge_functions]]
   path = "/login"
