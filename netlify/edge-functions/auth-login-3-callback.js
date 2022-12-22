@@ -12,11 +12,17 @@ export default async function (request, context) {
     SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET
   )}`;
 
+  const isDev = Deno.env.get("NETLIFY_DEV") === "true";
+
+  const SPOTIFY_REDIRECT_URI = isDev
+    ? "http://localhost:8888/callback"
+    : Deno.env.get("SPOTIFY_REDIRECT_URI");
+
   const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code: spotifyCode,
-      redirect_uri: Deno.env.get("SPOTIFY_REDIRECT_URI"),
+      redirect_uri: SPOTIFY_REDIRECT_URI,
     }),
     method: "POST",
     headers: {
