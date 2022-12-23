@@ -206,10 +206,6 @@ h2 {
   margin-bottom: 0.5rem;
 }
 
-.chosen {
-  border-color: red;
-}
-
 .sidebar h2 {
   margin-top: 0;
 }
@@ -220,4 +216,10 @@ h2 {
 
 label p:last-child {
   margin-bottom: 0;
+}
+
+.error-container {
+  max-width: 48rem;
+  background-color: #860b24;
+  padding: 0.5rem 1rem;
 }

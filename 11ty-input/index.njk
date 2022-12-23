@@ -10,6 +10,12 @@
   </head>
   <body class="intro-page">
     <h1>discover-mix</h1>
+    <div style="display: none;" id="expired-message" tabindex="-1" class="error-container">
+      <p>Oops, your session has expired. Please click 'Login with Spotify' below to continue.</p>
+      <p>
+        <a class="login-link" href="/login/">Login with Spotify</a>
+      </p>
+    </div>
     <p>discover-mix is a tool that creates big Spotify playlists based on the algorithmic genre playlists created by
       <a href="https://everynoise.com/">Every Noise at Once</a>. By choosing a few genres you are interested in, you can
         create a huge playlist for shuffling, so you'll always have something new to listen to.</p>
@@ -61,5 +67,20 @@
       when you are looking at your top genres.</p>
     <p>The Every Noise at Once website is an amazing resource for music fans - it demonstrates the sheer magnitude of music
       available on Spotify, but also makes it possible to find music that is suited to your taste.</p>
+    <script>
+      window.addEventListener('load', function () {
+        const message = new URL(window.location).searchParams.get('message');
+        if (message) {
+          if (message === "expired") {
+            const expiredMessage = document
+              .getElementById('expired-message')
+              expiredMessage
+              .style
+              .display = 'block';
+            expiredMessage.focus();
+          }
+        }
+      })
+    </script>
   </body>
-</html>
+</html></body></body></html></body></html></body></html></body></html>

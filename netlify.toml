@@ -22,6 +22,10 @@
   function = "auth-redirect-if-no-cookie"
 
 [[edge_functions]]
+  path = "/auth-check"
+  function = "spotify-check-registered"
+
+[[edge_functions]]
   path = "/logout"
   function = "auth-logout"
 
