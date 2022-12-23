@@ -1,20 +1,22 @@
-import cheerio from "https://esm.sh/cheerio";
+const fetch = require("node-fetch");
+const { builder } = require("@netlify/functions");
+const cheerio = require("cheerio");
+const fs = require("fs");
 
-export default async function (request, context) {
-  const genreNames = new URL(request.url).searchParams.getAll("genre");
-
+async function getSimilarGenres(genreNames) {
   const everyNoiseParams = new URLSearchParams({
     scope: "all",
   });
 
   genreNames.forEach((genre) => everyNoiseParams.append("root", genre));
 
-  // fetch the ENAO page with sorted genres
   const everyNoiseHtml = await fetch(
     `https://everynoise.com/everynoise1d.cgi?${everyNoiseParams.toString()}`
   ).then((r) => r.text());
 
   const $ = cheerio.load(everyNoiseHtml);
+
+  console.log(everyNoiseHtml);
 
   const genres = [];
 
@@ -46,7 +48,24 @@ export default async function (request, context) {
       });
     });
 
-  // fetch the sound playlist
-
-  return context.json(genres);
+  return genres;
 }
+
+async function handler(event) {
+  // example path: /similar-genres/indie%20rock/pop
+  const rootGenres = event.path.split("/").slice(2).map(decodeURIComponent); // turn indie%20rock into indie rock
+
+  const genres = await getSimilarGenres(rootGenres);
+
+  // logic to generate the required content
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ genres, fetched: new Date() }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    ttl: 60 * 60 * 24 * 7, // 7 days
+  };
+}
+
+exports.handler = builder(handler);

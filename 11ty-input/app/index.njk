@@ -144,8 +144,8 @@
         </p>
         <h2>2. Choose which playlists you want</h2>
         <p>
-          Tick the checkbox on the types of playlists you want to include in
-                              your playlist.
+          Tick the checkbox on the types of playlists you want to include in your
+                    playlist.
         </p>
         <div class="playlist-types">
           <label
@@ -178,7 +178,7 @@
         <h2>3. Create your playlist</h2>
         <p>
           Give your playlist a name and hit 'Create playlist'. This will create a new playlist in your Spotify
-          account.
+                    account.
         </p>
         <form method="POST" id="playlist-form" action="/create-playlist" @submit.prevent="createPlaylist">
           <label>Playlist name <input type="text" name="name"/>
@@ -246,11 +246,11 @@
           genre
         ];
         console.log("should be getting similar genres for", genre);
-        const enaoUrl = `/similar-genres?genre=${genre}`;
+        const enaoUrl = `/similar-genres/${genre}`;
         console.log({enaoUrl});
-        const similarGenres = await fetch(enaoUrl).then((r) => r.json());
-        console.log({similarGenres});
-        this.similarGenres[genre] = similarGenres;
+        const similarGenresJson = await fetch(enaoUrl).then((r) => r.json());
+        console.log({similarGenresJson});
+        this.similarGenres[genre] = similarGenresJson.genres;
         console.log("removing from fetching for");
         this.fetchingFor = this.fetchingFor.filter((str) => str !== genre);
       }
@@ -259,12 +259,12 @@
         this.chosenGenres.forEach((genre) => {
           searchParams.append("genre", genre);
         });
-        const enaoUrl = `/similar-genres?${
-          searchParams.toString()
+        const enaoUrl = `/similar-genres/${
+          this.chosenGenres.join('/')
         }`;
-        const similarGenres = await fetch(enaoUrl).then((r) => r.json());
-        console.log({similarGenres});
-        this.similarGenresToChosen = similarGenres;
+        const similarGenresJson = await fetch(enaoUrl).then((r) => r.json());
+        console.log({similarGenresJson});
+        this.similarGenresToChosen = similarGenresJson.genres;
       }
       async function getPlaylistsToInclude() {
         const form = document.getElementById("playlist-form");

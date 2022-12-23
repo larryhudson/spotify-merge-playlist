@@ -33,9 +33,6 @@
   path = "/top-genres"
   function = "spotify-get-top-genres"
 
-[[edge_functions]]
-  path = "/similar-genres"
-  function = "enao-get-similar-genres"
 
 [[edge_functions]]
   path = "/artists-for-genre"
@@ -44,3 +41,8 @@
 [[edge_functions]]
   path = "/list-playlists-to-include"
   function = "spotify-prepare-playlist-info"
+
+[[redirects]]
+  from = "/similar-genres/*"
+  to = "/.netlify/builders/enao-get-similar-genres"
+  status = 200
