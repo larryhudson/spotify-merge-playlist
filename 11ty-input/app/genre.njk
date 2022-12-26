@@ -13,7 +13,8 @@ title: Genre
     </button>
     <h3>Artists for this genre</h3>
     <div v-if="artistsForGenre.length > 0">
-        <ul class="search-results search-results-small">
+        <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
+        <ul class="search-results search-results-small scroll-sideways">
             <li v-for="artist in artistsForGenre">
                 <a :href="`/app/artist/?artistId=${artist.id}`">
                     <div>
@@ -70,7 +71,7 @@ title: Genre
             console
             .log(artists)
             this
-            .artistsForGenre = artists.slice(0, 5);
+            .artistsForGenre = artists;
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
