@@ -161,9 +161,10 @@ button,
   background-color: inherit;
   color: inherit;
   border-color: var(--border-color);
+  font-size: inherit;
   border-style: solid;
-  border-radius: 5px;
-  border-width: 1px;
+  border-radius: 10px;
+  border-width: 2px;
 
   text-decoration: none;
 
@@ -200,8 +201,9 @@ button:active,
 
 .toggle-button {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -4px;
+  right: -4px;
+  border-width: 0;
 
   font-size: 1rem;
 }
@@ -279,4 +281,8 @@ label p:last-child {
   border-radius: 10px;
 
   text-decoration: none;
+}
+
+select {
+  padding: 0.5rem;
 }

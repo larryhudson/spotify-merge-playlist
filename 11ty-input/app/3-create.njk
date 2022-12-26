@@ -23,15 +23,17 @@ stepNum: 3
         You haven't chosen any playlist types yet. Before creating your playlist, go back to step 2 and add some playlist types
         that will be included in your playlist.
     </p>
-    <label>Playlist name <input type="text" name="name"/>
+    <label style="margin-top: 1rem; font-weight: bold">Playlist name <input type="text" name="name" style="margin-left: 0.5rem;"/>
     </label>
     <input v-for="genre in chosenGenres" type="hidden" name="genre" :value="genre"/>
     <input v-for="playlistType in chosenTypes" type="hidden" name="playlist-type" :value="playlistType"/>
-    <button>
-        <span v-if="!creatingPlaylist">Create playlist</span>
-        <span v-else="">Creating playlist...</span>
-    </button>
-    <div v-if="createdPlaylist">
+    <div style="margin-top: 1rem;">
+        <button>
+            <span v-if="!creatingPlaylist">Create playlist</span>
+            <span v-else="">Creating playlist...</span>
+        </button>
+    </div>
+    <div style="display: inline-block" v-if="createdPlaylist">
         <div v-if="'url' in createdPlaylist">
             <p>
                 Playlist created!
