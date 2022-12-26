@@ -9,7 +9,6 @@ title: Artist
         style="max-width: 150px; height: auto; background-color: var(--blue-8)"
         v-if="'images' in artistData"
         :src="artistData.images.at(-2).url"/>
-    <div v-else="" style="width: 150px; height: 150px; background-color: var(--blue-8); margin-bottom: 1.5rem"></div>
     <p>
         <a class="button button-generous" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
             Spotify</a>
