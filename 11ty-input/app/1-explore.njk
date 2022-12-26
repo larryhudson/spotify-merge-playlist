@@ -16,7 +16,7 @@ stepNum: 1
     <h3 style="display: inline-block">
         Chosen genres
     </h3>
-    <button @click="clearAllGenres" style="display: inline-block">× Clear all</button>
+    <button @click="clearAllGenres" v-if="chosenGenres.length > 0" style="display: inline-block">× Clear all</button>
     <ul class="genres" v-if="chosenGenres.length > 0">
         <li class="chosen" v-for="genre in chosenGenres">
             {% include 'genre-card.njk' %}
