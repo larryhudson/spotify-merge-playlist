@@ -54,7 +54,9 @@ export default async function (_request, context) {
         return b.count - a.count;
       });
 
-    return context.json(sortedGenres);
+    const topTwenty = sortedGenres.slice(0, 20);
+
+    return context.json(topTwenty);
   } catch (err) {
     console.log("should be returning error");
     console.log({ err: JSON.stringify(err) });
