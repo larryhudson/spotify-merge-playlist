@@ -26,7 +26,7 @@ title: Genre
     </select>
     <a class="button button-generous" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">Open
         on Spotify</a>
-    <div v-if="previewPlaylistId !== null">
+    <div style="margin-top: 1rem" v-if="previewPlaylistId !== null">
         <iframe
             :src="`https://embed.spotify.com/?uri=spotify:playlist:${previewPlaylistId}`"
             style="width: 100%; height: 500px"></iframe>
