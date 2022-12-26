@@ -1,0 +1,84 @@
+---
+title: 2. Choose types
+stepNum: 2
+---
+
+{# Tick boxes with playlist types #}
+{# -- For each, some info and link to an example #}
+    <p>
+Tick the checkbox on the types of playlists you want to include in your
+                playlist.
+</p>
+    <div class="playlist-types" id="playlist-types-app" @vue:mounted="init" hidden="" :hidden="false"> <label v-for="(playlistType, index) in playlistTypes" :class="{chosen: isChoosing(playlistType.name)}">
+        <input type="checkbox" @change="toggleType(playlistType.name)" :checked="isChoosing(playlistType.name)"/>
+        <p>
+            <strong>${playlistType.name}</strong>
+        </p>
+        <p>${playlistType.description}</p>
+    </label>
+</div>
+<p>
+    <a class="button" href="/app/3-create">Next step: create your playlist &rarr;</a>
+</p>
+<script type="module">
+    // This is going to mount its own Petite Vue thing
+    async function init() {
+        console.log("initialising chosen types...")
+        loadChosenTypes.bind(this)()
+    }
+    async function loadChosenTypes() {
+        const chosenTypesJson = localStorage.getItem('chosen-playlist-types') || "[]";
+        try {
+            const chosenTypes = JSON.parse(chosenTypesJson);
+            this.chosenTypes = chosenTypes;
+        } catch (err) {
+            console.log(err)
+            // TODO: show error message?
+        }
+    }
+    async function updateChosenTypesInLocalStorage() {
+        localStorage.setItem('chosen-playlist-types', JSON.stringify(this.chosenTypes));
+    }
+    async function toggleType(typeName) {
+        if (this.chosenTypes.includes(typeName)) {
+            this.chosenTypes = this.chosenTypes.filter(type => type !== typeName);
+        } else {
+            this.chosenTypes.push(typeName);
+        } updateChosenTypesInLocalStorage.bind(this)();
+    }
+    import {createApp} from "/petite-vue.es.js";
+    const petiteVueApp = createApp({
+        playlistTypes: [
+            {
+                name: "Sound",
+                description: "Songs new and old that define the genre"
+            },
+            {
+                name: "Intro",
+                description: "An attempt at an algorithmic introduction to the genre"
+            },
+            {
+                name: "Pulse",
+                description: "What fans of the genre are listening to now"
+            },
+            {
+                name: "Edge",
+                description: "Recently released music that fans of the genre are checking out"
+            }, {
+                name: "♀Filter",
+                description: "An algorithmic attempt to find music in the genre made wholly or partly by women"
+            }, {
+                name: "2022",
+                description: "Music from the genre that came out in 2022"
+            }
+        ],
+        chosenTypes: [],
+        init,
+        toggleType,
+        isChoosing(type) {
+            return this.chosenTypes.includes(type)
+        },
+        $delimiters: ["${", "}"]
+    })
+    petiteVueApp.mount("#playlist-types-app")
+</script>

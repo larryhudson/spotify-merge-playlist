@@ -1,0 +1,76 @@
+---
+title: 1. Explore genres
+stepNum: 1
+---
+
+<p>
+    Click '+ add' on the genres you're interested in. Click 'view in sidebar' to get an idea of what is in each genre. Click
+    'explore similar' to get a list of similar genres.
+</p>
+<p>
+    <a href="/app/top-genres/" class="button button-generous">Explore top genres</a>
+</p>
+<h3>
+    Chosen genres
+</h3>
+<div id="chosen-genres-app" hidden="" :hidden="false" @vue:mounted="init">
+    <ul class="genres" v-if="chosenGenres.length > 0">
+        <li v-for="genre in chosenGenres">
+            {% include 'genre-card.njk' %}
+        </li>
+    </ul>
+    <p v-else="">
+        You haven't chosen any genres yet. Check out your top genres and explore similar genres above.
+    </p>
+</div>
+<p style="text-align: right;">
+    <a class="button button-generous" href="/app/2-types">Next step: choose playlist types &rarr;</a>
+</p>
+<script type="module">
+    // This is going to mount its own Petite Vue thing
+    async function init() {
+        console.log("initialising chosen genres...")
+        loadChosenGenres.bind(this)()
+    }
+    async function loadChosenGenres() {
+        const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
+        try {
+            const chosenGenres = JSON.parse(chosenGenresJson);
+            console.log({chosenGenres})
+            this.chosenGenres = chosenGenres;
+        } catch (err) {
+            console.log(err)
+            // TODO: show error message?
+        }
+    }
+    async function updateChosenGenresInLocalStorage() {
+        localStorage.setItem('chosen-genres', JSON.stringify(this.chosenGenres));
+    }
+    async function toggleGenre(genreName) {
+        if (this.chosenGenres.includes(genreName)) {
+            this.chosenGenres = this.chosenGenres.filter(genre => genre !== genreName);
+        } else {
+            this.chosenGenres.push(genreName);
+        } updateChosenGenresInLocalStorage.bind(this)();
+    }
+    import {createApp} from "/petite-vue.es.js";
+    const petiteVueApp = createApp({
+        chosenGenres: [],
+        init,
+        toggleGenre,
+        isChoosing(genreName) {
+            return this.chosenGenres.includes(genreName)
+        },
+        $delimiters: ["${", "}"]
+    })
+    petiteVueApp.mount("#chosen-genres-app")
+    document.addEventListener('turbo:visit', function (event) {
+        if (event
+                .detail
+                .url
+                .endsWith("/app/1-explore/")) {
+            console.log("trying to mount chosen genres app")
+            petiteVueApp.mount("#chosen-genres-app")
+        }
+    })
+</script>

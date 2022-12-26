@@ -74,7 +74,7 @@ h1 {
   list-style: none;
   padding-left: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
 }
 
@@ -155,7 +155,8 @@ h1 {
   border: none;
 }
 
-button {
+button,
+.button {
   background-color: inherit;
   color: inherit;
   border-color: var(--border-color);
@@ -163,16 +164,24 @@ button {
   border-radius: 5px;
   border-width: 1px;
 
+  text-decoration: none;
+
   padding: 0.25rem;
   margin: 0.25rem;
 }
 
-button:hover {
+.button-generous {
+  padding: 0.5rem;
+}
+
+button:hover,
+.button:hover {
   background-color: var(--blue-9);
   color: var(--blue-0);
 }
 
-button:active {
+button:active,
+.button:active {
   background-color: var(--blue-7);
 }
 
@@ -194,10 +203,6 @@ button:active {
 
 a {
   color: var(--ink);
-}
-
-h2 {
-  margin-top: 3rem;
 }
 
 .genre-name {
@@ -222,4 +227,36 @@ label p:last-child {
   max-width: 48rem;
   background-color: #860b24;
   padding: 0.5rem 1rem;
+}
+
+.step-nav ul {
+  display: flex;
+  list-style-type: none;
+  justify-content: space-between;
+  padding-left: 0;
+  text-align: center;
+  max-width: 32rem;
+}
+
+.step-nav a {
+  display: block;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+}
+
+.step-nav a[aria-current] {
+  background-color: var(--blue-2);
+  color: var(--blue-11);
+}
+
+.step-nav li {
+  width: 30%;
+}
+
+.alert {
+  background-color: #fcf433;
+  color: black;
+  padding: 1rem;
 }

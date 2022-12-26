@@ -1,0 +1,10 @@
+<span class="genre-name">${genre.name}</span>
+<span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
+<button class="toggle-button" @click="toggleGenre(genre.name)">
+    <span v-if="isChoosing(genre.name)">
+        × remove
+    </span>
+    <span v-else="">
+        + add
+    </span>
+</button>

@@ -9,6 +9,7 @@ module.exports = function (eleventyConfig) {
     dir: {
       input: "11ty-input",
       output: "11ty-output",
+      layouts: "_layouts",
     },
   };
 };

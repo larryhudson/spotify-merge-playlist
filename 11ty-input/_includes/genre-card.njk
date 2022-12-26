@@ -1,0 +1,9 @@
+<span class="genre-name">${genre}</span>
+<button class="toggle-button" @click="toggleGenre(genre)">
+    <span v-if="isChoosing(genre)">
+        × remove
+    </span>
+    <span v-else="">
+        + add
+    </span>
+</button>
