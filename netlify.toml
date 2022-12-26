@@ -46,6 +46,14 @@
   path = "/list-playlists-to-include"
   function = "spotify-prepare-playlist-info"
 
+[[edge_functions]]
+  path = "/playlists-for-genre"
+  function = "spotify-playlists-for-genre"
+
+[[edge_functions]]
+  path = "/spotify-similar-genres"
+  function = "spotify-similar-genres"
+
 [[redirects]]
   from = "/similar-genres/*"
   to = "/.netlify/builders/enao-get-similar-genres"

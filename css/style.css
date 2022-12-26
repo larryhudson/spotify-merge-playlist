@@ -33,6 +33,7 @@ body {
 body {
   max-width: 42rem;
   margin: 0 auto;
+  padding: 1rem;
 }
 
 .intro-page li {
@@ -193,6 +194,10 @@ button:active,
   --border-color: var(--blue-11);
 }
 
+.chosen a {
+  color: var(--blue-11);
+}
+
 .toggle-button {
   position: absolute;
   bottom: 0;
@@ -259,4 +264,19 @@ label p:last-child {
   background-color: #fcf433;
   color: black;
   padding: 1rem;
+}
+
+.pills {
+  list-style: none;
+  padding-left: 0;
+}
+
+.pill-link {
+  display: inline-block;
+  border: 2px solid var(--border-color);
+  padding: 0.25rem 0.5rem;
+  margin: 0.25rem;
+  border-radius: 10px;
+
+  text-decoration: none;
 }
