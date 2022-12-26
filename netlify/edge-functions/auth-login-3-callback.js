@@ -42,7 +42,7 @@ export default async function (request, context) {
     return new Response(null, {
       status: 301,
       headers: {
-        Location: "/app/",
+        Location: "/app/1-explore/",
       },
     });
   } else {
