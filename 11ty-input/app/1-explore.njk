@@ -29,14 +29,12 @@ stepNum: 1
 <script type="module">
     // This is going to mount its own Petite Vue thing
     async function init() {
-        console.log("initialising chosen genres...")
         loadChosenGenres.bind(this)()
     }
     async function loadChosenGenres() {
         const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
         try {
             const chosenGenres = JSON.parse(chosenGenresJson);
-            console.log({chosenGenres})
             this.chosenGenres = chosenGenres;
         } catch (err) {
             console.log(err)

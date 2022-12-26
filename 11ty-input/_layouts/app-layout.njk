@@ -38,7 +38,6 @@
                 import {createApp} from "/petite-vue.es.js";
                 async function checkAuth() {
                     const authResponse = await fetch("/auth-check").then((r) => r.json());
-                    console.log({authResponse})
                     if (authResponse.status === "error") { // show the error message
                         if (authResponse.error.status === 401) {
                             window.location.href = "/?message=expired"
