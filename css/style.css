@@ -80,9 +80,13 @@ h1 {
 }
 
 .playlist-types {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: center;
 }
 
+label p {
+  margin: 0;
+}
 .genres ul {
   gap: 0.5rem;
 }
@@ -188,7 +192,8 @@ button:active,
 }
 
 .genres li.chosen,
-.playlist-types label.chosen {
+.playlist-types label.chosen,
+.pill-link.chosen {
   background-color: var(--blue-2);
   color: var(--blue-11);
 
@@ -285,4 +290,44 @@ label p:last-child {
 
 select {
   padding: 0.5rem;
+}
+
+h3 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.search-results {
+  list-style: none;
+  padding-left: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-results li {
+  max-width: 150px;
+  border: 2px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.search-results img {
+  max-width: 150px;
+  height: auto;
+}
+
+.search-results-small {
+  gap: 0.5rem;
+}
+
+.search-results-small li,
+.search-results-small img {
+  max-width: 75px;
+}
+
+.search-results-small li {
+  padding: 0.5rem;
+  border: none;
 }

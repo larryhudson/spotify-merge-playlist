@@ -4,18 +4,21 @@ stepNum: 1
 ---
 
 <p>
-    Click '+ add' on the genres you're interested in. Click 'view in sidebar' to get an idea of what is in each genre. Click
-    'explore similar' to get a list of similar genres.
+    Click '+ add' on the genres you're interested in. Click on a genre to find out more and to explore similar.
 </p>
-<p>
+<p style="margin-top: 2rem">
     <a href="/app/top-genres/" class="button button-generous">Explore top genres</a>
 </p>
-<h3>
-    Chosen genres
-</h3>
+<p style="margin-top: 2rem">
+    <a href="/app/search/" class="button button-generous">Search by artist</a>
+</p>
 <div id="chosen-genres-app" hidden="" :hidden="false" @vue:mounted="init">
+    <h3 style="display: inline-block">
+        Chosen genres
+    </h3>
+    <button @click="clearAllGenres" style="display: inline-block">× Clear all</button>
     <ul class="genres" v-if="chosenGenres.length > 0">
-        <li v-for="genre in chosenGenres">
+        <li class="chosen" v-for="genre in chosenGenres">
             {% include 'genre-card.njk' %}
         </li>
     </ul>
@@ -51,11 +54,16 @@ stepNum: 1
             this.chosenGenres.push(genreName);
         } updateChosenGenresInLocalStorage.bind(this)();
     }
+    async function clearAllGenres() {
+        this.chosenGenres = []
+        updateChosenGenresInLocalStorage.bind(this)();
+    }
     import {createApp} from "/petite-vue.es.js";
     const petiteVueApp = createApp({
         chosenGenres: [],
         init,
         toggleGenre,
+        clearAllGenres,
         isChoosing(genreName) {
             return this.chosenGenres.includes(genreName)
         },

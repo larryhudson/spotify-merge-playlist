@@ -1,6 +1,54 @@
-{# Search heading #}
-{# Toggle between searching for genre or artist #}
-{# Search form - input #}
-{# Search results #}
-{# If artists - artist cards #}
-{# If genres - genre cards #}
+---
+title: Search
+---
+
+<div id="search-app" @vue:mounted="init">
+    <h3>Search by artist</h3>
+    <p>Enter an artist below to search.</p>
+    <form id="artist-search-form" method="GET" @submit.prevent="getSearchResults">
+        <label>Artist name</label>
+        <input v-model="searchInput" name="q"/>
+        <button>Search</button>
+    </form>
+    <div v-if="searchResults.length > 0">
+        <ul class="search-results">
+            <li v-for="artist in searchResults">
+                <a :href="`/app/artist/?artistId=${artist.id}`">
+                    <div>
+                        <img :src="artist.images.at(-2).url" alt=""/>
+                    </div>
+                    <div>
+                        ${artist.name} (popularity: ${artist.popularity})
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="module">
+    // This is going to mount its own Petite Vue thing
+    async function init() {
+        const searchParam = new URL(window.location).searchParams.get('q');
+        this.searchInput = searchParam;
+        if (searchParam) {
+            this.getSearchResults.bind(this)()
+        }
+    }
+    async function getSearchResults() {
+        const searchResults = await fetch(`/spotify-search?type=artist&q=${
+            this.searchInput
+        }`).then(r => r.json())
+        this.searchResults = searchResults;
+        window.history.replaceState(null, document.title, `/app/search/?q=${
+            this.searchInput
+        }`)
+    }
+    import {createApp} from "/petite-vue.es.js";
+    createApp({
+        init,
+        searchResults: [],
+        searchInput: "",
+        getSearchResults,
+        $delimiters: ["${", "}"]
+    }).mount("#search-app")
+</script>

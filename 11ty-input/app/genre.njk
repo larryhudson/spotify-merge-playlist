@@ -3,18 +3,36 @@ title: Genre
 ---
 
 <div id="genre-detail-app" @vue:mounted="init">
-    <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing()}">
-        <span v-if="isChoosing()">
+    <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing(genreName)}">
+        <span v-if="isChoosing(genreName)">
             × remove ${genreName} from your chosen genres
         </span>
         <span v-else="">
             + add ${genreName} to your chosen genres
         </span>
     </button>
+    <h3>Artists for this genre</h3>
+    <div v-if="artistsForGenre.length > 0">
+        <ul class="search-results search-results-small">
+            <li v-for="artist in artistsForGenre">
+                <a :href="`/app/artist/?artistId=${artist.id}`">
+                    <div>
+                        <img :src="artist.images.at(-2).url" alt=""/>
+                    </div>
+                    <div>
+                        ${artist.name}
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
     <h3>Similar genres</h3>
     <ul class="pills">
         <li style="display: inline-block" v-for="similarGenre in similarGenres">
-            <a class="pill-link button" :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
+            <a
+                class="pill-link button"
+                :class="{chosen: isChoosing(similarGenre.name)}"
+                :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
         </li>
     </ul>
     <h3 style="display: inline-block">Explore what is in this genre</h3>
@@ -38,6 +56,21 @@ title: Genre
         loadChosenGenres.bind(this)();
         getPlaylistsForGenre.bind(this)();
         getSimilarGenres.bind(this)();
+        getArtistsForGenre.bind(this)();
+    }
+    async function getArtistsForGenre() {
+        const paramString = new URLSearchParams({
+                type: 'artist', q: `genre:"${
+                this.genreName
+            }"`
+        }).toString()
+        const searchUrl = `/spotify-search?${paramString}`
+        const artists = await fetch(searchUrl)
+            .then(r => r.json())
+            console
+            .log(artists)
+            this
+            .artistsForGenre = artists.slice(0, 5);
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
@@ -86,12 +119,13 @@ title: Genre
         previewPlaylistId: null,
         playlistsForGenre: [],
         similarGenres: [],
+        artistsForGenre: [],
         genreName,
         init,
         toggleGenre,
         fetching: false,
-        isChoosing() {
-            return this.chosenGenres.includes(this.genreName)
+        isChoosing(genreName) {
+            return this.chosenGenres.includes(genreName)
         },
         $delimiters: ["${", "}"]
     }).mount("#genre-detail-app")

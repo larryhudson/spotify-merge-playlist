@@ -10,11 +10,11 @@ Tick the checkbox on the types of playlists you want to include in your
                 playlist.
 </p>
     <div class="playlist-types" id="playlist-types-app" @vue:mounted="init" hidden="" :hidden="false"> <label v-for="(playlistType, index) in playlistTypes" :class="{chosen: isChoosing(playlistType.name)}">
-        <input type="checkbox" @change="toggleType(playlistType.name)" :checked="isChoosing(playlistType.name)"/>
         <p>
+            <input type="checkbox" @change="toggleType(playlistType.name)" :checked="isChoosing(playlistType.name)"/>
             <strong>${playlistType.name}</strong>
+            &ndash; ${playlistType.description}
         </p>
-        <p>${playlistType.description}</p>
     </label>
 </div>
 <p style="text-align: right">
@@ -55,7 +55,7 @@ Tick the checkbox on the types of playlists you want to include in your
             },
             {
                 name: "Intro",
-                description: "An attempt at an algorithmic introduction to the genre"
+                description: "An attempt at an introduction to the genre"
             },
             {
                 name: "Pulse",
@@ -66,7 +66,7 @@ Tick the checkbox on the types of playlists you want to include in your
                 description: "Recently released music that fans of the genre are checking out"
             }, {
                 name: "♀Filter",
-                description: "An algorithmic attempt to find music in the genre made wholly or partly by women"
+                description: "An attempt to find music in the genre made wholly or partly by women"
             }, {
                 name: "2022",
                 description: "Music from the genre that came out in 2022"
