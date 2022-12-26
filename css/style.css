@@ -139,21 +139,9 @@ label p {
   background-color: var(--blue-8);
 }
 
-.wrapper {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .main {
-  flex: 1 1 600px;
-}
-
-.sidebar {
-  flex: 0 1 400px;
-  position: sticky;
-  top: 0;
-  height: 600px;
-  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 iframe {
@@ -330,4 +318,11 @@ h3 {
 .search-results-small li {
   padding: 0.5rem;
   border: none;
+}
+
+.scroll-sideways {
+  max-width: 100%;
+  display: auto;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
 }
