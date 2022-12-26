@@ -1,0 +1,132 @@
+---
+title: Genre
+---
+
+<div id="genre-detail-app" @vue:mounted="init">
+    <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing(genreName)}">
+        <span v-if="isChoosing(genreName)">
+            × remove ${genreName} from your chosen genres
+        </span>
+        <span v-else="">
+            + add ${genreName} to your chosen genres
+        </span>
+    </button>
+    <h3>Artists for this genre</h3>
+    <div v-if="artistsForGenre.length > 0">
+        <ul class="search-results search-results-small">
+            <li v-for="artist in artistsForGenre">
+                <a :href="`/app/artist/?artistId=${artist.id}`">
+                    <div>
+                        <img :src="artist.images.at(-2).url" alt=""/>
+                    </div>
+                    <div>
+                        ${artist.name}
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h3>Similar genres</h3>
+    <ul class="pills">
+        <li style="display: inline-block" v-for="similarGenre in similarGenres">
+            <a
+                class="pill-link button"
+                :class="{chosen: isChoosing(similarGenre.name)}"
+                :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
+        </li>
+    </ul>
+    <h3 style="display: inline-block">Explore what is in this genre</h3>
+    <select style="display: inline-block" @change="updatePreviewPlaylist">
+        <option
+            v-for="(playlistType, index) in playlistsForGenre"
+            :value="playlistType.id"
+            :selected="index === 0 ? true : false">${playlistType.type}</option>
+    </select>
+    <a class="button button-generous" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">Open
+        on Spotify</a>
+    <div style="margin-top: 1rem" v-if="previewPlaylistId !== null">
+        <iframe
+            :src="`https://embed.spotify.com/?uri=spotify:playlist:${previewPlaylistId}`"
+            style="width: 100%; height: 500px"></iframe>
+    </div>
+</div>
+<script type="module">
+    // This is going to mount its own Petite Vue thing
+    async function init() {
+        loadChosenGenres.bind(this)();
+        getPlaylistsForGenre.bind(this)();
+        getSimilarGenres.bind(this)();
+        getArtistsForGenre.bind(this)();
+    }
+    async function getArtistsForGenre() {
+        const paramString = new URLSearchParams({
+                type: 'artist', q: `genre:"${
+                this.genreName
+            }"`
+        }).toString()
+        const searchUrl = `/spotify-search?${paramString}`
+        const artists = await fetch(searchUrl)
+            .then(r => r.json())
+            console
+            .log(artists)
+            this
+            .artistsForGenre = artists.slice(0, 5);
+    }
+    async function updatePreviewPlaylist(event) {
+        this.previewPlaylistId = event.target.value;
+    }
+    async function getSimilarGenres() {
+        const similarGenres = await fetch(`/spotify-similar-genres?genre=${
+            this.genreName
+        }`).then((r) => r.json());
+        console.log({similarGenres})
+        this.similarGenres = similarGenres;
+    }
+    async function getPlaylistsForGenre() {
+        const playlists = await fetch(`/playlists-for-genre?genre=${
+            this.genreName
+        }`).then((r) => r.json());
+        console.log({playlists})
+        this.playlistsForGenre = playlists[0];
+        this.previewPlaylistId = playlists[0][0].id;
+    }
+    async function loadChosenGenres() {
+        const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
+        try {
+            const chosenGenres = JSON.parse(chosenGenresJson);
+            this.chosenGenres = chosenGenres;
+        } catch (err) {
+            console.log(err)
+            // TODO: show error message?
+        }
+    }
+    async function updateChosenGenresInLocalStorage() {
+        localStorage.setItem('chosen-genres', JSON.stringify(this.chosenGenres));
+    }
+    async function toggleGenre() {
+        if (this.chosenGenres.includes(this.genreName)) {
+            this.chosenGenres = this.chosenGenres.filter(genre => genre !== this.genreName);
+        } else {
+            this.chosenGenres.push(this.genreName);
+        } updateChosenGenresInLocalStorage.bind(this)();
+    }
+    import {createApp} from "/petite-vue.es.js";
+    const genreName = new URL(window.location).searchParams.get('genre');
+    document.querySelector('h2').innerText = `${genreName}`
+    createApp({
+        chosenGenres: [],
+        updatePreviewPlaylist,
+        previewPlaylistId: null,
+        playlistsForGenre: [],
+        similarGenres: [],
+        artistsForGenre: [],
+        genreName,
+        init,
+        toggleGenre,
+        fetching: false,
+        isChoosing(genreName) {
+            return this.chosenGenres.includes(genreName)
+        },
+        $delimiters: ["${", "}"]
+    }).mount("#genre-detail-app")
+</script>

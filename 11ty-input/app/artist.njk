@@ -1,0 +1,64 @@
+---
+title: Artist
+---
+
+<div id="artist-detail-app" @vue:mounted="init">
+    <img style="max-width: 150px; height: auto" v-if="'images' in artistData" :src="artistData.images.at(-2).url"/>
+    <p>
+        <a class="button button-generous" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
+            Spotify</a>
+    </p>
+    <h3>Genres for this artist</h3>
+    <ul class="pills" v-if="'genres' in artistData">
+        <li style="display: inline-block" v-for="genre in artistData.genres">
+            <a class="pill-link button" :class="{chosen: isChoosing(genre)}" :href="`/app/genre/?genre=${genre}`">${genre}</a>
+        </li>
+    </ul>
+    <h3>Related artists</h3>
+    <ul class="pills" v-if="'related' in artistData">
+        <li style="display: inline-block" v-for="artist in artistData.related">
+            <a class="pill-link button" :href="`/app/artist/?artistId=${artist.id}`">${artist.name}</a>
+        </li>
+    </ul>
+</div>
+<script type="module">
+    // This is going to mount its own Petite Vue thing
+    async function init() {
+        loadChosenGenres.bind(this)();
+        getArtistData.bind(this)();
+    }
+    async function updatePreviewPlaylist(event) {
+        this.previewPlaylistId = event.target.value;
+    }
+    async function getArtistData() {
+        const artistData = await fetch(`/spotify-artist?artistId=${
+            this.artistId
+        }`).then((r) => r.json());
+        console.log({artistData})
+        this.artistData = artistData;
+        document.querySelector('h2').innerText = artistData.name
+    }
+    async function loadChosenGenres() {
+        const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
+        try {
+            const chosenGenres = JSON.parse(chosenGenresJson);
+            this.chosenGenres = chosenGenres;
+        } catch (err) {
+            console.log(err)
+            // TODO: show error message?
+        }
+    }
+    import {createApp} from "/petite-vue.es.js";
+    const artistId = new URL(window.location).searchParams.get('artistId');
+    document.querySelector('h2').innerText = "Loading..."
+    createApp({
+        chosenGenres: [],
+        isChoosing(genre) {
+            return this.chosenGenres.includes(genre)
+        },
+        artistId,
+        artistData: {},
+        init,
+        $delimiters: ["${", "}"]
+    }).mount("#artist-detail-app")
+</script>

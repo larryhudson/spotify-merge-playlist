@@ -16,7 +16,7 @@ export default async function (request, context) {
 
   const SPOTIFY_REDIRECT_URI = isDev
     ? "http://localhost:8888/callback"
-    : Deno.env.get("SPOTIFY_REDIRECT_URI");
+    : "https://multi-page--discover-mix.netlify.app/callback";
 
   const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
     body: new URLSearchParams({
@@ -42,7 +42,7 @@ export default async function (request, context) {
     return new Response(null, {
       status: 301,
       headers: {
-        Location: "/app/",
+        Location: "/app/1-explore/",
       },
     });
   } else {

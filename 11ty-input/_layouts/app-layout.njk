@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>{{ title }} | discover-mix</title>
+        <link rel="stylesheet" href="/css/style.css"/>
+        <meta name="description" content="Create big Spotify playlists based on your favourite genres"/>
+    </head>
+    <body>
+        <h1>discover-mix</h1>
+        <div class="wrapper">
+            <div class="main">
+                <div id="auth-check-app" hidden="" :hidden="false" @vue:mounted="checkAuth">
+                    <div class="error-container" v-if="authError">
+                        {% include 'auth-check-message.njk' %}
+                    </div>
+                </div>
+                <nav class="step-nav" aria-label="Step">
+                    <ul>
+                        <li>
+                            <a {% if stepNum === 1 %} aria-current="page" {% endif %} href="/app/1-explore/">1. Explore genres</a>
+                        </li>
+                        <li>
+                            <a {% if stepNum === 2 %} aria-current="page" {% endif %} href="/app/2-types/">2. Choose types</a>
+                        </li>
+                        <li>
+                            <a {% if stepNum === 3 %} aria-current="page" {% endif %} href="/app/3-create/">3. Create playlist</a>
+                        </li>
+                    </nav>
+                    <h2>{{ title }}</h2>
+                    {{ content|safe }}
+                </div>
+            </div>
+            <script type="module">
+                // import * as Turbo from '/turbo.es.js';
+                import {createApp} from "/petite-vue.es.js";
+                async function checkAuth() {
+                    const authResponse = await fetch("/auth-check").then((r) => r.json());
+                    if (authResponse.status === "error") { // show the error message
+                        if (authResponse.error.status === 401) {
+                            window.location.href = "/?message=expired"
+                            return;
+                        }
+                        this.authError = authResponse.error;
+                        return;
+                    } else {
+                        this.authError = false;
+                    }
+                }
+                window.addEventListener('load', function () {
+                    createApp({
+                        authError: null,
+                        checkAuth,
+                        $delimiters: ["${", "}"]
+                    }).mount("#auth-check-app");
+                })
+            </script>
+        </body>
+    </body>
+</html>

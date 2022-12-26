@@ -1,0 +1,11 @@
+<a :href="`/app/genre/?genre=${genre}`">
+    <span class="genre-name">${genre}</span>
+</a>
+<button class="toggle-button" @click="toggleGenre(genre)">
+    <span v-if="isChoosing(genre)">
+        × remove
+    </span>
+    <span v-else="">
+        + add
+    </span>
+</button>
