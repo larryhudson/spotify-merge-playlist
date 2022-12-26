@@ -11,44 +11,46 @@ title: Genre
             + add ${genreName} to your chosen genres
         </span>
     </button>
-    <h3>Artists for this genre</h3>
-    <div v-if="artistsForGenre.length > 0">
-        <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
-        <ul class="search-results search-results-small scroll-sideways">
-            <li v-for="artist in artistsForGenre">
-                <a :href="`/app/artist/?artistId=${artist.id}`">
-                    <div>
-                        <img :src="artist.images.at(-2).url" alt=""/>
-                    </div>
-                    <div>
-                        ${artist.name}
-                    </div>
-                </a>
+    <div hidden="" :hidden="!fetched ? true : undefined">
+        <h3>Artists for this genre</h3>
+        <div v-if="artistsForGenre.length > 0">
+            <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
+            <ul class="search-results search-results-small scroll-sideways">
+                <li v-for="artist in artistsForGenre">
+                    <a :href="`/app/artist/?artistId=${artist.id}`">
+                        <div>
+                            <img :src="artist.images.at(-2).url" alt=""/>
+                        </div>
+                        <div>
+                            ${artist.name}
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h3>Similar genres</h3>
+        <ul class="pills">
+            <li style="display: inline-block" v-for="similarGenre in similarGenres">
+                <a
+                    class="pill-link button"
+                    :class="{chosen: isChoosing(similarGenre.name)}"
+                    :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
             </li>
         </ul>
-    </div>
-    <h3>Similar genres</h3>
-    <ul class="pills">
-        <li style="display: inline-block" v-for="similarGenre in similarGenres">
-            <a
-                class="pill-link button"
-                :class="{chosen: isChoosing(similarGenre.name)}"
-                :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
-        </li>
-    </ul>
-    <h3 style="display: inline-block">Explore what is in this genre</h3>
-    <select style="display: inline-block" @change="updatePreviewPlaylist">
-        <option
-            v-for="(playlistType, index) in playlistsForGenre"
-            :value="playlistType.id"
-            :selected="index === 0 ? true : false">${playlistType.type}</option>
-    </select>
-    <a class="button button-generous" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">Open
-        on Spotify</a>
-    <div style="margin-top: 1rem" v-if="previewPlaylistId !== null">
-        <iframe
-            :src="`https://embed.spotify.com/?uri=spotify:playlist:${previewPlaylistId}`"
-            style="width: 100%; height: 500px"></iframe>
+        <h3 style="display: inline-block">Explore what is in this genre</h3>
+        <select style="display: inline-block" @change="updatePreviewPlaylist">
+            <option
+                v-for="(playlistType, index) in playlistsForGenre"
+                :value="playlistType.id"
+                :selected="index === 0 ? true : false">${playlistType.type}</option>
+        </select>
+        <a class="button button-generous" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">Open
+            on Spotify</a>
+        <div style="margin-top: 1rem" v-if="previewPlaylistId !== null">
+            <iframe
+                :src="`https://embed.spotify.com/?uri=spotify:playlist:${previewPlaylistId}`"
+                style="width: 100%; height: 500px"></iframe>
+        </div>
     </div>
 </div>
 <script type="module">
@@ -82,6 +84,7 @@ title: Genre
         }`).then((r) => r.json());
         console.log({similarGenres})
         this.similarGenres = similarGenres;
+        this.fetched = true;
     }
     async function getPlaylistsForGenre() {
         const playlists = await fetch(`/playlists-for-genre?genre=${
@@ -124,7 +127,7 @@ title: Genre
         genreName,
         init,
         toggleGenre,
-        fetching: false,
+        fetched: false,
         isChoosing(genreName) {
             return this.chosenGenres.includes(genreName)
         },
