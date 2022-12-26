@@ -5,7 +5,7 @@ export default function (request, context) {
 
   const SPOTIFY_REDIRECT_URI = isDev
     ? "http://localhost:8888/callback"
-    : "https://multi-page--discover-mix.netlify.app/callback";
+    : Deno.env.get("SPOTIFY_REDIRECT_URI");
 
   const requestUrl = new URL(request.url);
   const stateValue = requestUrl.searchParams.get("state");
