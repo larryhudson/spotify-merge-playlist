@@ -4,6 +4,13 @@ title: Your top genres
 
 <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
 <div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
+    <div class="button-group">
+        <button
+            v-for="timeRange in timeRanges"
+            @click="changeTimeRange(timeRange.value)"
+            :class="{chosen: chosenTimeRange === timeRange.value}"
+            :aria-pressed="chosenTimeRange === timeRange.value ? true : undefined">${timeRange.label}</button>
+    </div>
     <p v-if="fetching">Loading top genres...</p>
     <ul v-else="" class="genres">
         <li v-for="genre in genresToShow" :class="{chosen: isChoosing(genre.name)}">
@@ -18,16 +25,24 @@ title: Your top genres
 <script type="module">
     // This is going to mount its own Petite Vue thing
     async function init() {
-        console
-            .log("initialising top genres...")
-            loadChosenGenres
-            .bind(this)()
-            fetchTopGenres
-            .bind(this)()
+        console.log("initialising top genres...")
+        loadChosenGenres.bind(this)();
+        loadChosenTimeRange.bind(this)();
+        fetchTopGenres.bind(this)();
+    }
+    async function loadChosenTimeRange() {
+        this.chosenTimeRange = localStorage.getItem('chosen-time-range') || "medium_term";
+    }
+    async function changeTimeRange(timeRange) {
+        this.chosenTimeRange = timeRange;
+        localStorage.setItem('chosen-time-range', timeRange);
+        fetchTopGenres.bind(this)();
     }
     async function fetchTopGenres() {
         this.fetching = true;
-        const genres = await fetch("/top-genres").then((r) => r.json());
+        const genres = await fetch(`/top-genres?time_range=${
+            this.chosenTimeRange
+        }`).then((r) => r.json());
         if (genres.error) {
             window.location.href = "/?message=expired";
             return;
@@ -57,6 +72,20 @@ title: Your top genres
     }
     import {createApp} from "/petite-vue.es.js";
     createApp({
+        timeRanges: [
+            {
+                value: 'short_term',
+                label: 'Last 4 weeks'
+            }, {
+                value: 'medium_term',
+                label: 'Last 6 months'
+            }, {
+                value: 'long_term',
+                label: 'All time'
+            }
+        ],
+        chosenTimeRange: "medium_term",
+        changeTimeRange,
         topGenres: [],
         chosenGenres: [],
         init,

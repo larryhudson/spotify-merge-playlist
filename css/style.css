@@ -188,6 +188,11 @@ button:active,
   --border-color: var(--blue-11);
 }
 
+button.chosen {
+  background-color: var(--blue-2);
+  color: var(--blue-11);
+}
+
 .chosen a {
   color: var(--blue-11);
 }
@@ -354,4 +359,33 @@ h3 {
 
 .bullets li {
   margin-bottom: 1rem;
+}
+
+.button-group {
+  display: flex;
+
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.button-group button {
+  border-right: none;
+  border-radius: 0;
+  margin: 0;
+
+  padding: 0.5rem 1rem;
+}
+
+.button-group button:last-child {
+  border-right: 2px solid var(--border-color);
+}
+
+.button-group button:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.button-group button:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }

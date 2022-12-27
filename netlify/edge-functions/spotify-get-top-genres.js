@@ -1,11 +1,14 @@
 import genresJson from "./generated/genres.json" assert { type: "json" };
 
-export default async function (_request, context) {
+export default async function (request, context) {
+  const timeRange =
+    new URL(request.url).searchParams.get("time_range") || "medium_term";
+
   const spotifyAccessToken = context.cookies.get("spotify-access-token");
 
   async function getTopArtists() {
     const spotifyResponse = await fetch(
-      "https://api.spotify.com/v1/me/top/artists?limit=50",
+      `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=${timeRange}`,
       {
         headers: {
           Authorization: `Bearer ${spotifyAccessToken}`,
