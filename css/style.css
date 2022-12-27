@@ -329,3 +329,25 @@ h3 {
 .scroll-sideways li {
   flex-shrink: 0;
 }
+
+.search-results-dropdown {
+  list-style: none;
+  padding-left: 0;
+
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.search-results-dropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+
+  border-radius: 0;
+
+  border-bottom: none;
+
+  padding: 0.5rem;
+
+  margin: 0;
+}

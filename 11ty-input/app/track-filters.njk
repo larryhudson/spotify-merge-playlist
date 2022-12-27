@@ -38,22 +38,32 @@ title: Add filters
                 <option value="more than">more than</option>
                 <option value="less than">less than</option>
             </select>
-            <div style="position: relative">
-                <input x-model="trackSearchInput" @input.debounce="getSearchResults" type="text" placeholder="search for a song here"/>
-                <template x-if="trackSearchResults.length > 0">
-                    <ul class="search-results-dropdown">
-                        <template x-for="result in trackSearchResults">
-                            <li>
-                                <button :data-track-id="result.id" @click.prevent="chosenTrack = result">
-                                    <span x-text="result.name"></span>
-                                    by
-                                    <span x-text="result.artists"></span>
-                                </button>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-            </div>
+            <template x-if="chosenTrack">
+                <div class="filter-chosen-track">
+                    <span x-text="chosenTrack.name"></span>
+                    by
+                    <span x-text="chosenTrack.artists"></span>
+                    <button @click="chosenTrack = null">× unset</button>
+                </div>
+            </template>
+            <template x-if="chosenTrack === null">
+                <div style="position: relative">
+                    <input x-model="trackSearchInput" @input.debounce="getSearchResults" type="text" placeholder="search for a song here"/>
+                    <template x-if="trackSearchResults.length > 0">
+                        <ul class="search-results-dropdown">
+                            <template x-for="result in trackSearchResults">
+                                <li>
+                                    <button :data-track-id="result.id" @click.prevent="setChosenTrack(result)">
+                                        <span x-text="result.name"></span>
+                                        by
+                                        <span x-text="result.artists"></span>
+                                    </button>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                </div>
+            </template>
         </div>
     </p>
     <button>Add filter</button>
@@ -110,12 +120,11 @@ async function updateFiltersInLocalStorage() {
     localStorage.setItem('chosen-filters', JSON.stringify(this.chosenFilters));
 }
 async function setChosenTrack(track) {
-    console
-        .log("should set track")
-        console
-        .log(track.name)
-        this
-        .chosenTrack = track;
+    console.log("should set track")
+    console.log(track.name);
+    this.chosenTrack = track;
+    this.trackSearchInput = "";
+    this.trackSearchResults = [];
 }
 import Alpine from "/alpine.es.js";
 document.addEventListener('alpine:init', () => {
@@ -131,6 +140,7 @@ document.addEventListener('alpine:init', () => {
         loadChosenFilters,
         getSearchResults,
         chosenTrack: null,
+        setChosenTrack,
         trackSearchInput: "",
         trackSearchResults: []
     }))
