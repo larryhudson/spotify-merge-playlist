@@ -15,6 +15,7 @@ title: Artist
     </p>
     <div hidden="" :hidden="fetched === false ? true : undefined">
         <h3>Top tracks for this artist</h3>
+        <p>Tap a song below to hear a preview.</p>
         <div>
             <ul class="list-flex flex-wrap track-previews">
                 <li v-for="track in artistData.topTracks">
