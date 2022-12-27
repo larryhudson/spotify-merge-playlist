@@ -3,3 +3,5 @@ package-lock.json
 11ty-output
 # Local Netlify folder
 .netlify
+netlify/edge-functions/generated
+.cache
