@@ -12,13 +12,17 @@ title: Genre
         </span>
     </button>
     <div hidden="" :hidden="!fetched ? true : undefined">
-        <h3 style="display: inline-block">Explore what is in this genre</h3>
-        <select style="display: inline-block" @change="updatePreviewPlaylist">
-            <option
-                v-for="(playlistType, index) in playlistsForGenre"
-                :value="playlistType.id"
-                :selected="index === 0 ? true : false">${playlistType.type}</option>
-        </select>
+        <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h3 style="margin-top: 0">Explore what is in this genre</h3>
+            <div class="select-container">
+                <select style="display: inline-block" @change="updatePreviewPlaylist">
+                    <option
+                        v-for="(playlistType, index) in playlistsForGenre"
+                        :value="playlistType.id"
+                        :selected="index === 0 ? true : false">${playlistType.type}</option>
+                </select>
+            </div>
+        </div>
         <p>Tap a song below to hear a preview.
             <a class="button" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View full playlist on
                 Spotify</a>

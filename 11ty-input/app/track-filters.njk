@@ -61,18 +61,22 @@ title: Add filters
     <h3>Add a filter</h3>
     <form @submit.prevent="addFilter">
         <p>I want the
-            <select style="margin-left: 0.5rem" x-model="filterType">
-                <option value="danceability">danceability</option>
-                <option value="energy">energy</option>
-                <option value="tempo">tempo</option>
-                <option value="valence">valence</option>
-            </select>
+            <div class="select-container">
+                <select style="margin-left: 0.5rem" x-model="filterType">
+                    <option value="danceability">danceability</option>
+                    <option value="energy">energy</option>
+                    <option value="tempo">tempo</option>
+                    <option value="valence">valence</option>
+                </select>
+            </div>
         </p>
         <p>to be the same as or
-            <select style="margin-left: 0.5rem" x-model="condition">
-                <option value="more than">more than</option>
-                <option value="less than">less than</option>
-            </select>
+            <div class="select-container">
+                <select style="margin-left: 0.5rem" x-model="condition">
+                    <option value="more than">more than</option>
+                    <option value="less than">less than</option>
+                </select>
+            </div>
         </p>
         <p>
             <template x-if="chosenTrack">

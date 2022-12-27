@@ -1,4 +1,7 @@
-:root {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 :root {
@@ -326,6 +329,12 @@ h3 {
   max-width: 64px;
 }
 
+.search-results-small img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+
 .search-results-small .artist-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -482,3 +491,5 @@ h3 {
 .playing-track a {
   color: var(--blue-11);
 }
+
+/* Custom styling for select */
