@@ -175,7 +175,7 @@ export default async function (request, context) {
     return context.json({
       status: "created",
       playlistName,
-      url: `spotify:playlist:${newPlaylistId}`,
+      url: `https://open.spotify.com/playlist/${newPlaylistId}`,
     });
   } catch (err) {
     console.log("Caught an error!");
