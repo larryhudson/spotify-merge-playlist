@@ -23,8 +23,26 @@ stepNum: 3
         You haven't chosen any playlist types yet. Before creating your playlist, go back to step 2 and add some playlist types
         that will be included in your playlist.
     </p>
+    <h3>Optional: tweak your playlist</h3>
+    <p>You can add filters to fine tune the songs that are added to your playlist.</p>
+    <div v-if="chosenFilters.length > 0">
+        <p>Chosen filters:</p>
+        <ul>
+            <li v-for="filter in chosenFilters">
+                ${filter.filterType} is same as or ${filter.condition} ${filter.track.name} by ${filter.track.artists}
+            </li>
+        </ul>
+    </div>
+    <p>
+        <a class="button button-generous" href="/app/track-filters/">
+            <span v-if="chosenFilters.length === 0">Add filters</span>
+            <span v-else="">Edit filters</span>
+        </a>
+    </p>
+    <h3>Name your playlist</h3>
     <label style="margin-top: 1rem; font-weight: bold">Playlist name <input type="text" name="name" style="margin-left: 0.5rem;"/>
     </label>
+    <input v-for="filter in chosenFilters" type="hidden" name="filter" :value="JSON.stringify(filter)"/>
     <input v-for="genre in chosenGenres" type="hidden" name="genre" :value="genre"/>
     <input v-for="playlistType in chosenTypes" type="hidden" name="playlist-type" :value="playlistType"/>
     <div style="margin-top: 1rem;">
@@ -45,24 +63,31 @@ stepNum: 3
             <pre>${JSON.stringify(createdPlaylist)}</pre>
         </div>
     </div>
-</form>
-<script type="module">
-    // This is going to mount its own Petite Vue thing
-    async function init() {
-        console
-            .log("initialising chosen playlists...")
-            loadChosenGenres
-            .bind(this)()
-            console
-            .log("initialising chosen types...")
-        loadChosenTypes
-        .bind(this)()
+</p></form><script type="module">
+// This is going to mount its own Petite Vue thing
+async function init() {
+    console.log("initialising chosen playlists...")
+    loadChosenGenres.bind(this)();
+    console.log("initialising chosen types...")
+    loadChosenTypes.bind(this)();
+    console.log("initialising chosen filters...")
+    loadChosenFilters.bind(this)();
 }
 async function loadChosenGenres() {
     const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
     try {
         const chosenGenres = JSON.parse(chosenGenresJson);
         this.chosenGenres = chosenGenres;
+    } catch (err) {
+        console.log(err)
+        // TODO: show error message?
+    }
+}
+async function loadChosenFilters() {
+    const chosenFiltersJson = localStorage.getItem('chosen-filters') || "[]";
+    try {
+        const chosenFilters = JSON.parse(chosenFiltersJson);
+        this.chosenFilters = chosenFilters;
     } catch (err) {
         console.log(err)
         // TODO: show error message?
@@ -98,8 +123,8 @@ const petiteVueApp = createApp({
     createPlaylist,
     chosenGenres: [],
     chosenTypes: [],
+    chosenFilters: [],
     init,
     $delimiters: ["${", "}"]
 })
-petiteVueApp.mount("#playlist-form")
-</script>
+petiteVueApp.mount("#playlist-form")</script>

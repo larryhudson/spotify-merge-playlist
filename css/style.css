@@ -276,7 +276,8 @@ label p:last-child {
   text-decoration: none;
 }
 
-select {
+select,
+input {
   padding: 0.5rem;
 }
 

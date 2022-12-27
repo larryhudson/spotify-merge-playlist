@@ -1,0 +1,138 @@
+---
+title: Add filters
+---
+
+<p>Here you can add filters to fine tune your playlist.</p>
+<div x-data="filters" x-init="loadChosenFilters()">
+    <template x-if="chosenFilters.length > 0">
+        <div>
+            <h3>Chosen filters</h3>
+            <ul>
+                <template x-for="(filter, filterIndex) in chosenFilters">
+                    <li>
+                        <span x-text="filter.filterType"></span>
+                        is same as or
+                        <span x-text="filter.condition"></span>
+                        <span x-text="filter.track.name"></span>
+                        by
+                        <span x-text="filter.track.artists"></span>
+                        (value:
+                        <span x-text="filter.value"></span>)
+                        <button @click="removeFilter(filterIndex)">remove</button>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+    <h3>Add a filter</h3>
+    <form @submit.prevent="addFilter">
+        <p>I want the
+            <select x-model="filterType">
+                <option value="danceability">danceability</option>
+                <option value="energy">energy</option>
+                <option value="tempo">tempo</option>
+                <option value="valence">valence</option>
+            </select>
+            to be the same as or
+            <select x-model="condition">
+                <option value="more than">more than</option>
+                <option value="less than">less than</option>
+            </select>
+            <div style="position: relative">
+                <input x-model="trackSearchInput" @input.debounce="getSearchResults" type="text" placeholder="search for a song here"/>
+                <template x-if="trackSearchResults.length > 0">
+                    <ul class="search-results-dropdown">
+                        <template x-for="result in trackSearchResults">
+                            <li>
+                                <button :data-track-id="result.id" @click.prevent="chosenTrack = result">
+                                    <span x-text="result.name"></span>
+                                    by
+                                    <span x-text="result.artists"></span>
+                                </button>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
+        </div>
+    </p>
+    <button>Add filter</button>
+</form></div><script type="module">
+// This is going to mount its own Petite Vue thing
+async function init() {}
+async function getSearchResults() {
+    const query = this.trackSearchInput;
+    console.log("searching for", query)
+    if (query === "" || query.length < 4) {
+        this.trackSearchResults = [];
+        return;
+    }
+    const searchParamsString = new URLSearchParams({type: 'track', q: query}).toString()
+    const searchUrl = `/spotify-search?${searchParamsString}`
+    const results = await fetch(searchUrl).then(r => r.json())
+    console.log(results);
+    this.trackSearchResults = results;
+}
+async function loadChosenFilters() {
+    const chosenFiltersJson = localStorage.getItem('chosen-filters') || "[]";
+    try {
+        const chosenFilters = JSON.parse(chosenFiltersJson);
+        this.chosenFilters = chosenFilters;
+    } catch (err) {
+        console.log(err)
+        // TODO: show error message?
+    }
+}
+async function removeFilter(filterIndex) {
+    this.chosenFilters = this.chosenFilters.filter((f, index) => index !== filterIndex);
+    updateFiltersInLocalStorage.bind(this)();
+}
+async function addFilter() {
+    // fetch features for track
+    const features = await fetch(`/spotify-track-features?trackId=${
+        this.chosenTrack.id
+    }`).then(r => r.json());
+    console.log({features});
+    const {filterType, condition} = this;
+    const value = features[this.filterType];
+    console.log({value});
+    const filterObj = {
+        filterType,
+        condition,
+        value,
+        track: this.chosenTrack
+    }
+    console.log(filterObj);
+    this.chosenFilters.push(filterObj);
+    updateFiltersInLocalStorage.bind(this)()
+}
+async function updateFiltersInLocalStorage() {
+    localStorage.setItem('chosen-filters', JSON.stringify(this.chosenFilters));
+}
+async function setChosenTrack(track) {
+    console
+        .log("should set track")
+        console
+        .log(track.name)
+        this
+        .chosenTrack = track;
+}
+import Alpine from "/alpine.es.js";
+document.addEventListener('alpine:init', () => {
+    Alpine.data('filters', () => ({
+        init() {
+            loadChosenFilters.bind(this)()
+        },
+        filterType: "danceability",
+        condition: "more than",
+        chosenFilters: [],
+        addFilter,
+        removeFilter,
+        loadChosenFilters,
+        getSearchResults,
+        chosenTrack: null,
+        trackSearchInput: "",
+        trackSearchResults: []
+    }))
+})
+Alpine.start()</script>

@@ -1,5 +1,8 @@
 import { findPlaylistsForGenre } from "./utils/find-playlists-for-genre.js";
 import { getSpotifyUserId } from "./utils/get-spotify-user-id.js";
+import { chunkArray } from "./utils/chunk-array.js";
+import { lookupMultipleTrackFeatures } from "./utils/lookup-track-features.js";
+import { filterTracksByFeature } from "./utils/filter-features.js";
 
 function createPlaylistDescription(playlists) {
   const ids = playlists.map((p) => p.playlistId);
@@ -66,26 +69,29 @@ async function createPlaylist(
 
   if (createResponse.ok) {
     const createResponseJson = await createResponse.json();
-    console.log(createResponseJson);
 
     const newPlaylistId = createResponseJson.id;
 
-    while (tracksToAdd.length > 0) {
-      await fetch(
-        `https://api.spotify.com/v1/playlists/${newPlaylistId}/tracks`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            uris: tracksToAdd.slice(0, 100).map((id) => `spotify:track:${id}`),
-          }),
-          headers: {
-            Authorization: `Bearer ${spotifyAccessToken}`,
-          },
-        }
-      );
+    const trackIdChunks = chunkArray(tracksToAdd);
 
-      tracksToAdd = tracksToAdd.slice(100);
-    }
+    await Promise.all(
+      trackIdChunks.map(async (trackIdChunk) => {
+        await fetch(
+          `https://api.spotify.com/v1/playlists/${newPlaylistId}/tracks`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              uris: trackIdChunk
+                .slice(0, 100)
+                .map((id) => `spotify:track:${id}`),
+            }),
+            headers: {
+              Authorization: `Bearer ${spotifyAccessToken}`,
+            },
+          }
+        );
+      })
+    );
 
     return newPlaylistId;
   }
@@ -98,6 +104,7 @@ export default async function (request, context) {
   const playlistName = formData.get("name");
   const genres = formData.getAll("genre");
   const playlistTypes = formData.getAll("playlist-type");
+  const filterJsonStrings = formData.getAll("filter");
 
   const spotifyAccessToken = context.cookies.get("spotify-access-token");
 
@@ -132,6 +139,31 @@ export default async function (request, context) {
 
     const allUniqueTracks = Array.from(new Set(allTrackIds));
 
+    let trackIds = allUniqueTracks;
+
+    if (filterJsonStrings.length > 0) {
+      const filters = filterJsonStrings.map(JSON.parse);
+
+      const trackChunks = chunkArray(allUniqueTracks);
+
+      const featureChunks = await Promise.all(
+        trackChunks.map((arrayOfIds) =>
+          lookupMultipleTrackFeatures({
+            arrayOfIds,
+            spotifyAccessToken,
+          })
+        )
+      );
+
+      trackIds = featureChunks.flat();
+
+      filters.forEach((filter) => {
+        trackIds = filterTracksByFeature(trackIds, filter);
+      });
+
+      trackIds = trackIds.map((t) => t.id);
+    }
+
     // return context.json(allUniqueTracks);
 
     const description = createPlaylistDescription(allData);
@@ -140,7 +172,7 @@ export default async function (request, context) {
       spotifyUserId,
       spotifyAccessToken,
       `🤖 ${playlistName}`,
-      allUniqueTracks,
+      trackIds,
       description
     );
 

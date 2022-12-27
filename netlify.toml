@@ -64,6 +64,10 @@
   function = "spotify-lookup-artist"
 
 [[edge_functions]]
+  path = "/spotify-track-features"
+  function = "spotify-track-features"
+
+[[edge_functions]]
   path = "/spotify-search"
   function = "spotify-search"
 
