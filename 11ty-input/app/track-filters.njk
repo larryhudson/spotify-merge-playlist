@@ -4,6 +4,40 @@ title: Add filters
 
 <p>Here you can add filters to fine tune your playlist.</p>
 <div x-data="filters" x-init="loadChosenFilters()">
+    <details style="border: 2px solid var(--border-color); padding: 1rem; border-radius: 10px;">
+        <summary>
+            <strong>About the filters</strong>
+        </summary>
+        <div>
+            <p>Here's some information about the filters from Spotify:</p>
+            <ul class="bullets">
+                <li>
+                    <strong>danceability</strong>
+                    &ndash; Danceability describes how suitable a track is for dancing based on a combination of musical elements including
+                    tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most
+                    danceable.
+                </li>
+                <li>
+                    <strong>energy</strong>
+                    &ndash; Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically,
+                    energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low
+                    on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre,
+                    onset rate, and general entropy.
+                </li>
+                <li>
+                    <strong>tempo</strong>
+                    &ndash; The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or
+                    pace of a given piece and derives directly from the average beat duration.
+                </li>
+                <li>
+                    <strong>valence</strong>
+                    &ndash; A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence
+                    sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad,
+                    depressed, angry).
+                </li>
+            </ul>
+        </div>
+    </details>
     <template x-if="chosenFilters.length > 0">
         <div>
             <h3>Chosen filters</h3>
@@ -27,17 +61,20 @@ title: Add filters
     <h3>Add a filter</h3>
     <form @submit.prevent="addFilter">
         <p>I want the
-            <select x-model="filterType">
+            <select style="margin-left: 0.5rem" x-model="filterType">
                 <option value="danceability">danceability</option>
                 <option value="energy">energy</option>
                 <option value="tempo">tempo</option>
                 <option value="valence">valence</option>
             </select>
-            to be the same as or
-            <select x-model="condition">
+        </p>
+        <p>to be the same as or
+            <select style="margin-left: 0.5rem" x-model="condition">
                 <option value="more than">more than</option>
                 <option value="less than">less than</option>
             </select>
+        </p>
+        <p>
             <template x-if="chosenTrack">
                 <div class="filter-chosen-track">
                     <span x-text="chosenTrack.name"></span>

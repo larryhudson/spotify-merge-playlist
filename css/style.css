@@ -351,3 +351,7 @@ h3 {
 
   margin: 0;
 }
+
+.bullets li {
+  margin-bottom: 1rem;
+}
