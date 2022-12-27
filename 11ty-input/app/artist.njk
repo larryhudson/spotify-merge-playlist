@@ -14,6 +14,41 @@ title: Artist
             Spotify</a>
     </p>
     <div hidden="" :hidden="fetched === false ? true : undefined">
+        <h3>Top tracks for this artist</h3>
+        <div>
+            <ul class="list-flex flex-wrap track-previews">
+                <li v-for="track in artistData.topTracks">
+                    <button
+                        :title="`${track.name} by ${track.artistStr}`"
+                        class="track-preview-button"
+                        @click="playTrack(track)"
+                        :aria-pressed="playingTrack === track ? 'true' : undefined">
+                        <img :src="track.imageUrl" :width="track.imageWidth" :height="track.imageWidth" alt=""/>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="playing-track-container" v-show="playingTrack !== null">
+            <div class="playing-track">
+                <div class="image-and-name">
+                    <div>
+                        <img :src="playingTrack.imageUrl"/>
+                    </div>
+                    <div>
+                        <p>
+                            <strong>${playingTrack.name}</strong>
+                        </p>
+                        <p>
+                            <a v-for="trackArtist in playingTrack.artists" :href="`/app/artist/?artistId=${trackArtist.id}`">${trackArtist.name}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="stop-button">
+                    <button @click="playingTrack = null">× Stop</button>
+                </div>
+                <audio @loadedMetadata="playAudio" id="preview-audio" :src="playingTrack.mp3Url"></audio>
+            </div>
+        </div>
         <h3>Genres for this artist</h3>
         <ul class="pills" v-if="'genres' in artistData">
             <li style="display: inline-block" v-for="genre in artistData.genres">
@@ -56,6 +91,13 @@ title: Artist
             // TODO: show error message?
         }
     }
+    async function playTrack(track) {
+        console.log("should play track", track)
+        this.playingTrack = track;
+    }
+    async function playAudio(event) {
+        event.target.play();
+    }
     import {createApp} from "/petite-vue.es.js";
     const artistId = new URL(window.location).searchParams.get('artistId');
     document.querySelector('h2').innerText = "Loading..."
@@ -68,6 +110,9 @@ title: Artist
         artistData: {},
         fetched: false,
         init,
+        playingTrack: null,
+        playTrack,
+        playAudio,
         $delimiters: ["${", "}"]
     }).mount("#artist-detail-app")
 </script>

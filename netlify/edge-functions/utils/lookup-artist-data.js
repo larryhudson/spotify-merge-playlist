@@ -49,3 +49,43 @@ export async function lookupRelatedArtists({ artistId, spotifyAccessToken }) {
     };
   }
 }
+
+export async function lookupArtistTracks({ artistId, spotifyAccessToken }) {
+  const tracksResponse = await fetch(
+    `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=AU`, // TODO: don't hardcode the AU market?
+    {
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      },
+    }
+  );
+
+  if (tracksResponse.ok) {
+    const tracksJson = await tracksResponse.json();
+
+    const formattedTracks = tracksJson.tracks.map((t) => ({
+      name: t.name,
+      id: t.id,
+      artists: t.artists.map((a) => ({
+        name: a.name,
+        id: a.id,
+      })),
+      artistStr: t.artists.map((a) => a.name).join(", "),
+      imageUrl: t.album.images.at(-1).url,
+      imageWidth: t.album.images.at(-1).width,
+      mp3Url: t.preview_url,
+    }));
+
+    return formattedTracks;
+  } else {
+    console.log("Error while looking up tracks for artist", artistId);
+    console.log("status code", tracksResponse.status);
+    console.log("status text", tracksResponse.statusText);
+    const errorText = await tracksResponse.text();
+    throw {
+      status: tracksResponse.status,
+      statusText: tracksResponse.statusText,
+      message: errorText,
+    };
+  }
+}

@@ -1,5 +1,6 @@
 import {
   lookupArtist,
+  lookupArtistTracks,
   lookupRelatedArtists,
 } from "./utils/lookup-artist-data.js";
 
@@ -20,6 +21,11 @@ export default async function (request, context) {
     spotifyAccessToken,
   });
 
+  const topTracks = await lookupArtistTracks({
+    artistId,
+    spotifyAccessToken,
+  });
+
   const toReturn = {
     name: artistData.name,
     id: artistData.id,
@@ -29,6 +35,7 @@ export default async function (request, context) {
       name: a.name,
       id: a.id,
     })),
+    topTracks,
   };
 
   return context.json(toReturn);
