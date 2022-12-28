@@ -197,6 +197,7 @@ button[aria-pressed] {
 button.chosen {
   background-color: var(--blue-2);
   color: var(--blue-11);
+  border-color: var(--blue-2);
 }
 
 .chosen a {
