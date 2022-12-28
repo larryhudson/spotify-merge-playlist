@@ -4,4 +4,5 @@ package-lock.json
 # Local Netlify folder
 .netlify
 netlify/edge-functions/generated
+netlify/edge-functions/_generated
 .cache

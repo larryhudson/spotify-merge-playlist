@@ -2,106 +2,106 @@
 title: Your top genres
 ---
 
+{% edge 'njk' %}
 <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
-<div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
+{# <pre> {{ eleventy|dump(2) }}</pre>
+<pre>{{ topGenres|dump(2) }}</pre> #}
+<div id="genres-pre-js">
     <div class="button-group">
-        <button
-            v-for="timeRange in timeRanges"
-            @click="changeTimeRange(timeRange.value)"
-            :class="{chosen: chosenTimeRange === timeRange.value}"
-            :aria-pressed="chosenTimeRange === timeRange.value ? true : undefined">${timeRange.label}</button>
+        {% set currentTimeRange = eleventy.edge.query.timeRange or "medium_term" %}
+        {% set timeRanges = [{value: 'short_term', label: 'Last 4 weeks'}, {value: 'medium_term', label: 'Last 6 months'}, {value: 'long_term', label: 'All time'}] %}
+        {% for timeRange in timeRanges %}
+            <form>
+                <button {% if currentTimeRange == timeRange.value %} aria-pressed="true" {% endif %} name="timeRange" value="{{ timeRange.value }}">{{ timeRange.label }}</button>
+            </form>
+        {% endfor %}
     </div>
-    <p v-if="fetching">Loading top genres...</p>
-    <ul v-else="" class="genres">
-        <li v-for="genre in genresToShow" :class="{chosen: isChoosing(genre.name)}">
-            {% include 'top-genre-card.njk' %}
-        </li>
-    </ul>
-    <button v-if="showingAllGenres === false" @click="showingAllGenres = true">
-        Show more top genres
-    </button>
+    <is-land on:visible>
+        <ul class="genres">
+            {% set genresToShow = topGenres | arrSlice(0, 10) %}
+            {% for genre in genresToShow %}
+                <li>
+                    <a href="/app/genre/?genre={{ genre.name }}">
+                        <span class="genre-name">{{ genre.name }}</span>
+                        <span class="artist-count" title="{{ genre.count }} of your top artists">{{ genre.count }}×</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <button disabled="">
+            Show more top genres
+        </button>
+        <template data-island="replace">
+            <div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
+                <ul class="genres">
+                    <li v-for="genre in genresToShow" :class="{chosen: isChoosing(genre.name)}">
+                        <a :href="`/app/genre/?genre=${genre.name}`">
+                            <span class="genre-name">${genre.name}</span>
+                            <span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
+                        </a>
+                        <button class="toggle-button" @click="toggleGenre(genre.name)">
+                            <span v-if="isChoosing(genre.name)">
+                                × remove
+                            </span>
+                            <span v-else="">
+                                + add
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+                <button v-if="showingAllGenres === false" @click="showingAllGenres = true">
+                    Show more top genres
+                </button>
+            </div>
+            <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
+            <script type="module">
+                // This is going to mount its own Petite Vue thing
+                async function init() {
+                    console.log("initialising top genres...")
+                    loadChosenGenres.bind(this)();
+                }
+                async function loadChosenGenres() {
+                    const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
+                    try {
+                        const chosenGenres = JSON.parse(chosenGenresJson);
+                        this.chosenGenres = chosenGenres;
+                    } catch (err) {
+                        console.log(err)
+                        // TODO: show error message?
+                    }
+                }
+                async function updateChosenGenresInLocalStorage() {
+                    localStorage.setItem('chosen-genres', JSON.stringify(this.chosenGenres));
+                }
+                async function toggleGenre(genreName) {
+                    if (this.chosenGenres.includes(genreName)) {
+                        this.chosenGenres = this.chosenGenres.filter(genre => genre !== genreName);
+                    } else {
+                        this.chosenGenres.push(genreName);
+                    } updateChosenGenresInLocalStorage.bind(this)();
+                }
+                import {createApp} from "/petite-vue.es.js";
+                createApp({
+                    topGenres: {{ topGenres | jsonToJs | safe }},
+                    chosenGenres: [],
+                    init,
+                    toggleGenre,
+                    showingAllGenres: false,
+                    isChoosing(genreName) {
+                        return this.chosenGenres.includes(genreName)
+                    },
+                    get genresToShow() {
+                        if (this.showingAllGenres) {
+                            return this.topGenres;
+                        } else {
+                            return this.topGenres.slice(0, 10);
+                        }
+                    },
+                    $delimiters: ["${", "}"]
+                }).mount("#top-genres-app")
+            </script>
+        </template>
+    </is-land>
 </div>
 <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
-<script type="module">
-    // This is going to mount its own Petite Vue thing
-    async function init() {
-        console.log("initialising top genres...")
-        loadChosenGenres.bind(this)();
-        loadChosenTimeRange.bind(this)();
-        fetchTopGenres.bind(this)();
-    }
-    async function loadChosenTimeRange() {
-        this.chosenTimeRange = localStorage.getItem('chosen-time-range') || "medium_term";
-    }
-    async function changeTimeRange(timeRange) {
-        this.chosenTimeRange = timeRange;
-        localStorage.setItem('chosen-time-range', timeRange);
-        fetchTopGenres.bind(this)();
-    }
-    async function fetchTopGenres() {
-        this.fetching = true;
-        const genres = await fetch(`/top-genres?time_range=${
-            this.chosenTimeRange
-        }`).then((r) => r.json());
-        if (genres.error) {
-            window.location.href = "/?message=expired";
-            return;
-        }
-        this.topGenres = genres;
-        this.fetching = false;
-    }
-    async function loadChosenGenres() {
-        const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
-        try {
-            const chosenGenres = JSON.parse(chosenGenresJson);
-            this.chosenGenres = chosenGenres;
-        } catch (err) {
-            console.log(err)
-            // TODO: show error message?
-        }
-    }
-    async function updateChosenGenresInLocalStorage() {
-        localStorage.setItem('chosen-genres', JSON.stringify(this.chosenGenres));
-    }
-    async function toggleGenre(genreName) {
-        if (this.chosenGenres.includes(genreName)) {
-            this.chosenGenres = this.chosenGenres.filter(genre => genre !== genreName);
-        } else {
-            this.chosenGenres.push(genreName);
-        } updateChosenGenresInLocalStorage.bind(this)();
-    }
-    import {createApp} from "/petite-vue.es.js";
-    createApp({
-        timeRanges: [
-            {
-                value: 'short_term',
-                label: 'Last 4 weeks'
-            }, {
-                value: 'medium_term',
-                label: 'Last 6 months'
-            }, {
-                value: 'long_term',
-                label: 'All time'
-            }
-        ],
-        chosenTimeRange: "medium_term",
-        changeTimeRange,
-        topGenres: [],
-        chosenGenres: [],
-        init,
-        toggleGenre,
-        fetching: false,
-        showingAllGenres: false,
-        isChoosing(genreName) {
-            return this.chosenGenres.includes(genreName)
-        },
-        get genresToShow() {
-            if (this.showingAllGenres) {
-                return this.topGenres;
-            } else {
-                return this.topGenres.slice(0, 10);
-            }
-        },
-        $delimiters: ["${", "}"]
-    }).mount("#top-genres-app")
-</script>
+{% endedge %}

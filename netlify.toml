@@ -1,9 +1,11 @@
 [build]
+    command = "npx @11ty/eleventy"
     publish = '11ty-output'
 
 [dev]
   targetPort = 8080
-  command = "npx @11ty/eleventy --watch --serve"
+  framework = "#static"
+  command = "npx @11ty/eleventy --quiet --watch"
 
 [[redirects]]
   from = "/app/"
@@ -83,3 +85,7 @@
   from = "/similar-genres/*"
   to = "/.netlify/builders/enao-get-similar-genres"
   status = 200
+
+[[edge_functions]]
+  function = "eleventy-edge"
+  path = "/app/*"

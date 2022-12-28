@@ -401,18 +401,22 @@ h3 {
   padding: 0.5rem 1rem;
 }
 
-.button-group button:last-child {
+.button-group form:last-child button {
   border-right: 2px solid var(--border-color);
 }
 
-.button-group button:first-child {
+.button-group form:first-child button {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
-.button-group button:last-child {
+.button-group form:last-child button {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.button-group button[aria-pressed] {
+  border-color: var(--blue-2);
 }
 
 .list-flex {
