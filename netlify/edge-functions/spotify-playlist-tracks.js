@@ -24,18 +24,5 @@ export default async function (request, context) {
     fields,
   });
 
-  const formattedTracks = playlistTracks.map((t) => ({
-    name: t.track.name,
-    id: t.track.id,
-    artists: t.track.artists.map((a) => ({
-      name: a.name,
-      id: a.id,
-    })),
-    artistStr: t.track.artists.map((a) => a.name).join(", "),
-    imageUrl: t.track.album.images.at(-1).url,
-    imageWidth: t.track.album.images.at(-1).width,
-    mp3Url: t.track.preview_url,
-  }));
-
-  return context.json(formattedTracks);
+  return context.json(playlistTracks);
 }

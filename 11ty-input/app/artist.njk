@@ -2,18 +2,14 @@
 title: Artist
 ---
 
+{% edge 'njk' %}
 <div id="artist-detail-app" @vue:mounted="init">
-    <img
-        width="150"
-        height="150"
-        style="max-width: 150px; height: auto; background-color: var(--blue-8)"
-        v-if="'images' in artistData"
-        :src="artistData.images.at(-2).url"/>
+    {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--blue-8)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
     <p>
         <a class="button button-generous" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
             Spotify</a>
     </p>
-    <div hidden="" :hidden="fetched === false ? true : undefined">
+    <div>
         <h3>Top tracks for this artist</h3>
         <p>Tap a song below to hear a preview.</p>
         <div>
@@ -29,7 +25,7 @@ title: Artist
                 </li>
             </ul>
         </div>
-        <div class="playing-track-container" v-show="playingTrack !== null">
+        <div class="playing-track-container" v-if="playingTrack !== null">
             <div class="playing-track">
                 <div class="image-and-name">
                     <div>
@@ -52,15 +48,19 @@ title: Artist
         </div>
         <h3>Genres for this artist</h3>
         <ul class="pills" v-if="'genres' in artistData">
-            <li style="display: inline-block" v-for="genre in artistData.genres">
-                <a class="pill-link button" :class="{chosen: isChoosing(genre)}" :href="`/app/genre/?genre=${genre}`">${genre}</a>
-            </li>
+            {% for genre in artist.genres %}
+                <li style="display: inline-block">
+                    <a class="pill-link button" :class="{chosen: isChoosing('{{ genre }}')}" href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
+                </li>
+            {% endfor %}
         </ul>
         <h3>Related artists</h3>
-        <ul class="pills" v-if="'related' in artistData">
-            <li style="display: inline-block" v-for="artist in artistData.related">
-                <a class="pill-link button" :href="`/app/artist/?artistId=${artist.id}`">${artist.name}</a>
-            </li>
+        <ul class="pills">
+            {% for relatedArtist in artist.related %}
+                <li style="display: inline-block">
+                    <a class="pill-link button" href="/app/artist/?artistId={{ relatedArtist.id }}">{{ relatedArtist.name }}</a>
+                </li>
+            {% endfor %}
         </ul>
     </div>
 </div>
@@ -74,10 +74,7 @@ title: Artist
         this.previewPlaylistId = event.target.value;
     }
     async function getArtistData() {
-        const artistData = await fetch(`/spotify-artist?artistId=${
-            this.artistId
-        }`).then((r) => r.json());
-        console.log({artistData})
+        const artistData = {{ artist | jsonToJs | safe }};
         this.artistData = artistData;
         document.querySelector('h2').innerText = artistData.name
         this.fetched = true;
@@ -117,3 +114,4 @@ title: Artist
         $delimiters: ["${", "}"]
     }).mount("#artist-detail-app")
 </script>
+{% endedge %}

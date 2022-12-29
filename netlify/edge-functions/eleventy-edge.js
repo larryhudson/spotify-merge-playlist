@@ -27,6 +27,8 @@ export default async (request, context) => {
         arr.slice(start, end)
       );
 
+      eleventyConfig.addFilter("arrAt", (arr, at) => arr.at(at));
+
       // Add some custom Edge-specific configuration
       // e.g. Fancier json output
       // eleventyConfig.addFilter("json", obj => JSON.stringify(obj, null, 2));

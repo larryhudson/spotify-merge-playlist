@@ -2,6 +2,7 @@
 title: Genre
 ---
 
+{% edge %}
 <div id="genre-detail-app" @vue:mounted="init">
     <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing(genreName)}">
         <span v-if="isChoosing(genreName)">
@@ -11,15 +12,14 @@ title: Genre
             + add ${genreName} to your chosen genres
         </span>
     </button>
-    <div hidden="" :hidden="!fetched ? true : undefined">
+    <div>
         <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
             <h3 style="margin-top: 0">Explore what is in this genre</h3>
             <div class="select-container">
                 <select style="display: inline-block" @change="updatePreviewPlaylist">
-                    <option
-                        v-for="(playlistType, index) in playlistsForGenre"
-                        :value="playlistType.id"
-                        :selected="index === 0 ? true : false">${playlistType.type}</option>
+                    {% for playlist in genre.playlists %}
+                        <option value="{{ playlist.id }}">{{ playlist.type }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -27,7 +27,7 @@ title: Genre
             <a class="button" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View full playlist on
                 Spotify</a>
         </p>
-        <div class="playing-track-container" v-show="playingTrack !== null">
+        <div class="playing-track-container" v-if="playingTrack">
             <div class="playing-track">
                 <div class="image-and-name">
                     <div>
@@ -44,7 +44,7 @@ title: Genre
                     </div>
                 </div>
                 <div class="stop-button">
-                    <button @click="playingTrack = null">× Stop</button>
+                    <button @click="stopPlaying">× Stop</button>
                 </div>
                 <audio @loadedMetadata="playAudio" id="preview-audio" :src="playingTrack.mp3Url"></audio>
             </div>
@@ -64,79 +64,48 @@ title: Genre
         </div>
     </div>
     <h3>Artists for this genre</h3>
-    <div v-if="artistsForGenre.length > 0">
+    {% if genre.artists.length > 5 %}
         <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
-        <ul class="search-results search-results-small scroll-sideways">
-            <li v-for="artist in artistsForGenre">
-                <a :href="`/app/artist/?artistId=${artist.id}`">
-                    <div>
-                        <img :src="artist.images.at(-2).url" alt=""/>
-                    </div>
-                    <div class="artist-name">
-                        ${artist.name}
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
+    {% endif %}
+    <ul class="search-results search-results-small scroll-sideways">
+        {% for artist in genre.artists %}
+            <a href="/app/artist/?artistId={{ artist.id }}">
+                <div>
+                    {% set lastImage = artist.images | last %} <img src="{{ lastImage.url }}" alt=""/>
+                </div>
+                <div class="artist-name">
+                    {{ artist.name }}
+                </div>
+            </a>
+        {% endfor %}
+    </ul>
     <h3>Similar genres</h3>
     <ul class="pills">
-        <li style="display: inline-block" v-for="similarGenre in similarGenres">
-            <a
-                class="pill-link button"
-                :class="{chosen: isChoosing(similarGenre.name)}"
-                :href="`/app/genre/?genre=${similarGenre.name}`">${similarGenre.name}</a>
-        </li>
+        {% for similarGenre in genre.similarGenres %}
+            <li style="display: inline-block">
+                <a
+                    class="pill-link button"
+                    :class="{chosen: isChoosing('{{ similarGenre.name }}')}"
+                    href="/app/genre/?genre={{ similarGenre.name }}">{{ similarGenre.name }}</a>
+            </li>
+        {% endfor %}
     </ul>
 </div>
 <script type="module">
     // This is going to mount its own Petite Vue thing
     async function init() {
         loadChosenGenres.bind(this)();
-        getPlaylistsForGenre.bind(this)();
-        getSimilarGenres.bind(this)();
-        getArtistsForGenre.bind(this)();
-    }
-    async function getArtistsForGenre() {
-        const paramString = new URLSearchParams({
-                type: 'artist', q: `genre:"${
-                this.genreName
-            }"`
-        }).toString()
-        const searchUrl = `/spotify-search?${paramString}`
-        const artists = await fetch(searchUrl)
-            .then(r => r.json())
-            console
-            .log(artists)
-            this
-            .artistsForGenre = artists;
+        // getPlaylistsForGenre.bind(this)(); getSimilarGenres.bind(this)(); getArtistsForGenre.bind(this)();
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
         this.getPlaylistTracks.bind(this)();
-    }
-    async function getSimilarGenres() {
-        const similarGenres = await fetch(`/spotify-similar-genres?genre=${
-            this.genreName
-        }`).then((r) => r.json());
-        console.log({similarGenres})
-        this.similarGenres = similarGenres;
-        this.fetched = true;
     }
     async function getPlaylistTracks() {
         const tracks = await fetch(`/spotify-playlist-tracks?playlistId=${
             this.previewPlaylistId
         }&limit=24`).then(r => r.json())
         this.previewTracks = tracks;
-    }
-    async function getPlaylistsForGenre() {
-        const playlists = await fetch(`/playlists-for-genre?genre=${
-            this.genreName
-        }`).then((r) => r.json());
-        console.log({playlists})
-        this.playlistsForGenre = playlists[0];
-        this.previewPlaylistId = playlists[0][0].id;
-        this.getPlaylistTracks.bind(this)();
     }
     async function loadChosenGenres() {
         const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
@@ -163,34 +132,35 @@ title: Genre
         this.playingTrack = track;
     }
     async function playAudio(event) {
-        console
-            .log(event)
-            event
-            .target
-            .play();
+        console.log(event);
+        event.target.play();
+    }
+    async function stopPlaying() {
+        this.playingTrack = null;
     }
     import {createApp} from "/petite-vue.es.js";
-    const genreName = new URL(window.location).searchParams.get('genre');
-    document.querySelector('h2').innerText = `${genreName}`
+    document.querySelector('h2').innerText = "{{ genre.name }}"
     createApp({
         chosenGenres: [],
         updatePreviewPlaylist,
-        previewPlaylistId: null,
-        previewTracks: [],
+        previewPlaylistId: "{{ genre.soundPlaylistId }}",
+        previewTracks: {{ genre.soundPlaylistTracks | jsonToJs | safe }},
         getPlaylistTracks,
-        playlistsForGenre: [],
-        similarGenres: [],
-        artistsForGenre: [],
-        genreName,
+        playlistsForGenre: {{ genre.playlists | jsonToJs | safe }},
+        similarGenres: {{ genre.similarGenres | jsonToJs | safe }},
+        artistsForGenre: {{ genre.artists | jsonToJs | safe }},
+        genreName: "{{ genre.name }}",
         init,
         toggleGenre,
         fetched: false,
         playingTrack: null,
         playTrack,
         playAudio,
+        stopPlaying,
         isChoosing(genreName) {
             return this.chosenGenres.includes(genreName)
         },
         $delimiters: ["${", "}"]
     }).mount("#genre-detail-app")
 </script>
+{% endedge %}
