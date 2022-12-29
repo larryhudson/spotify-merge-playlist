@@ -9,6 +9,14 @@ title: Artist
         <a class="button button-generous" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
             Spotify</a>
     </p>
+    <h3>Genres for this artist</h3>
+    <ul class="pills" v-if="'genres' in artistData">
+        {% for genre in artist.genres %}
+            <li style="display: inline-block">
+                <a class="pill-link button" :class="{chosen: isChoosing('{{ genre }}')}" href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
+            </li>
+        {% endfor %}
+    </ul>
     <div>
         <h3>Top tracks for this artist</h3>
         <p>Tap a song below to hear a preview.</p>
@@ -46,14 +54,6 @@ title: Artist
                 <audio @loadedMetadata="playAudio" id="preview-audio" :src="playingTrack.mp3Url"></audio>
             </div>
         </div>
-        <h3>Genres for this artist</h3>
-        <ul class="pills" v-if="'genres' in artistData">
-            {% for genre in artist.genres %}
-                <li style="display: inline-block">
-                    <a class="pill-link button" :class="{chosen: isChoosing('{{ genre }}')}" href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
-                </li>
-            {% endfor %}
-        </ul>
         <h3>Related artists</h3>
         <ul class="pills">
             {% for relatedArtist in artist.related %}
