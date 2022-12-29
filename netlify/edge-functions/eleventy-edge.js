@@ -13,7 +13,7 @@ export default async (request, context) => {
       precompiled: precompiledAppData,
 
       // default is [], add more keys to opt-in e.g. ["appearance", "username"]
-      cookies: [],
+      cookies: ["chosenGenres"],
     });
 
     edge.config((eleventyConfig) => {
@@ -28,6 +28,12 @@ export default async (request, context) => {
       );
 
       eleventyConfig.addFilter("arrAt", (arr, at) => arr.at(at));
+
+      eleventyConfig.addGlobalData("requestUrl", request.url);
+
+      eleventyConfig.addFilter("commaStrToArray", (commaStr) => {
+        return decodeURIComponent(commaStr).split(",");
+      });
 
       // Add some custom Edge-specific configuration
       // e.g. Fancier json output

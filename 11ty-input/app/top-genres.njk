@@ -16,92 +16,29 @@ title: Your top genres
             </form>
         {% endfor %}
     </div>
-    <is-land on:visible>
-        <ul class="genres">
-            {% set genresToShow = topGenres | arrSlice(0, 10) %}
-            {% for genre in genresToShow %}
-                <li>
-                    <a href="/app/genre/?genre={{ genre.name }}">
-                        <span class="genre-name">{{ genre.name }}</span>
-                        <span class="artist-count" title="{{ genre.count }} of your top artists">{{ genre.count }}×</span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-        <button disabled="">
-            Show more top genres
-        </button>
-        <template data-island="replace">
-            <div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
-                <ul class="genres">
-                    <li v-for="genre in genresToShow" :class="{chosen: isChoosing(genre.name)}">
-                        <a :href="`/app/genre/?genre=${genre.name}`">
-                            <span class="genre-name">${genre.name}</span>
-                            <span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
-                        </a>
-                        <button class="toggle-button" @click="toggleGenre(genre.name)">
-                            <span v-if="isChoosing(genre.name)">
+    <ul class="genres">
+        {% set genresToShow = topGenres | arrSlice(0, 10) %}
+        {% set chosenGenres = eleventy.edge.cookies.chosenGenres | commaStrToArray %}
+        {% for genre in genresToShow %}
+            <li>
+                <a href="/app/genre/?genre={{ genre.name }}">
+                    <span class="genre-name">{{ genre.name }}</span>
+                    <span class="artist-count" title="{{ genre.count }} of your top artists">{{ genre.count }}×</span>
+                    <form action="/toggle-genre">
+                        <button class="toggle-button" name="genre" value="{{ genre.name }}">
+                            {% if genre.name in chosenGenres %}
                                 × remove
-                            </span>
-                            <span v-else="">
+                            {% else %}
                                 + add
-                            </span>
+                            {% endif %}
                         </button>
-                    </li>
-                </ul>
-                <button v-if="showingAllGenres === false" @click="showingAllGenres = true">
-                    Show more top genres
-                </button>
-            </div>
-            <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
-            <script type="module">
-                // This is going to mount its own Petite Vue thing
-                async function init() {
-                    console.log("initialising top genres...")
-                    loadChosenGenres.bind(this)();
-                }
-                async function loadChosenGenres() {
-                    const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
-                    try {
-                        const chosenGenres = JSON.parse(chosenGenresJson);
-                        this.chosenGenres = chosenGenres;
-                    } catch (err) {
-                        console.log(err)
-                        // TODO: show error message?
-                    }
-                }
-                async function updateChosenGenresInLocalStorage() {
-                    localStorage.setItem('chosen-genres', JSON.stringify(this.chosenGenres));
-                }
-                async function toggleGenre(genreName) {
-                    if (this.chosenGenres.includes(genreName)) {
-                        this.chosenGenres = this.chosenGenres.filter(genre => genre !== genreName);
-                    } else {
-                        this.chosenGenres.push(genreName);
-                    } updateChosenGenresInLocalStorage.bind(this)();
-                }
-                import {createApp} from "/petite-vue.es.js";
-                createApp({
-                    topGenres: {{ topGenres | jsonToJs | safe }},
-                    chosenGenres: [],
-                    init,
-                    toggleGenre,
-                    showingAllGenres: false,
-                    isChoosing(genreName) {
-                        return this.chosenGenres.includes(genreName)
-                    },
-                    get genresToShow() {
-                        if (this.showingAllGenres) {
-                            return this.topGenres;
-                        } else {
-                            return this.topGenres.slice(0, 10);
-                        }
-                    },
-                    $delimiters: ["${", "}"]
-                }).mount("#top-genres-app")
-            </script>
-        </template>
-    </is-land>
+                        <input type="hidden" name="return_to" value="{{ requestUrl }}"/>
+                        <input type="hidden" name="action" value="{% if genre.name in chosenGenres %}remove{% else %}add{% endif %}"/>
+                    </form>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </div>
 <a class="button button-generous" href="/app/1-explore/">&larr; Done</a>
 {% endedge %}

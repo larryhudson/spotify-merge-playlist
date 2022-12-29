@@ -2,24 +2,29 @@
 title: Genre
 ---
 
-{% edge %}
+{% edge %} <pre>{{ requestUrl|dump(2) }}</pre>
+<pre>{{ eleventy|dump(2) }}</pre>
+{% set chosenGenres = eleventy.edge.cookies.chosenGenres|commaStrToArray %}
 <div id="genre-detail-app" @vue:mounted="init">
-    <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing(genreName)}">
-        <span v-if="isChoosing(genreName)">
-            × remove ${genreName} from your chosen genres
-        </span>
-        <span v-else="">
-            + add ${genreName} to your chosen genres
-        </span>
-    </button>
+    {% if genre.name in chosenGenres %}
+        <form action="/toggle-genre">
+            <button name="genre" value="{{ genre.name }}">× remove {{ genre.name }} from your chosen genres</button>
+            <input type="hidden" name="return_to" value="{{ requestUrl }}"/>
+            <input type="hidden" name="action" value="remove"/>
+        </form>
+    {% else %}
+        <form action="/toggle-genre">
+            <button name="genre" value="{{ genre.name }}">+ add {{ genre.name }} to your chosen genres</button>
+            <input type="hidden" name="return_to" value="{{ requestUrl }}"/>
+            <input type="hidden" name="action" value="add"/>
+        </form>
+    {% endif %}
     <div>
         <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
             <h3 style="margin-top: 0">Explore what is in this genre</h3>
             <div class="select-container">
                 <select style="display: inline-block" @change="updatePreviewPlaylist">
-                    {% for playlist in genre.playlists %}
-                        <option value="{{ playlist.id }}">{{ playlist.type }}</option>
-                    {% endfor %}
+                    <option value="{{ playlist.id }}">{{ playlist.type }}</option>
                 </select>
             </div>
         </div>
@@ -64,31 +69,25 @@ title: Genre
         </div>
     </div>
     <h3>Artists for this genre</h3>
-    {% if genre.artists.length > 5 %}
-        <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
-    {% endif %}
+    <p v-if="artistsForGenre.length > 5">You can swipe to the right to see more artists.</p>
     <ul class="search-results search-results-small scroll-sideways">
-        {% for artist in genre.artists %}
-            <a href="/app/artist/?artistId={{ artist.id }}">
-                <div>
-                    {% set lastImage = artist.images | last %} <img src="{{ lastImage.url }}" alt=""/>
-                </div>
-                <div class="artist-name">
-                    {{ artist.name }}
-                </div>
-            </a>
-        {% endfor %}
+        <a href="/app/artist/?artistId={{ artist.id }}">
+            <div>
+                <img src="{{ lastImage.url }}" alt=""/>
+            </div>
+            <div class="artist-name">
+                {{ artist.name }}
+            </div>
+        </a>
     </ul>
     <h3>Similar genres</h3>
     <ul class="pills">
-        {% for similarGenre in genre.similarGenres %}
-            <li style="display: inline-block">
-                <a
-                    class="pill-link button"
-                    :class="{chosen: isChoosing('{{ similarGenre.name }}')}"
-                    href="/app/genre/?genre={{ similarGenre.name }}">{{ similarGenre.name }}</a>
-            </li>
-        {% endfor %}
+        <li style="display: inline-block">
+            <a
+                class="pill-link button"
+                :class="{chosen: isChoosing('{{ similarGenre.name }}')}"
+                href="/app/genre/?genre={{ similarGenre.name }}">{{ similarGenre.name }}</a>
+        </li>
     </ul>
 </div>
 <script type="module">
@@ -163,4 +162,10 @@ title: Genre
         $delimiters: ["${", "}"]
     }).mount("#genre-detail-app")
 </script>
+{% for playlist in genre.playlists %}{% endfor %}
+{% if genre.artists.length > 5 %}{% endif %}
+{% for artist in genre.artists %}
+    {% set lastImage = artist.images | last %}
+{% endfor %}
+{% for similarGenre in genre.similarGenres %}{% endfor %}
 {% endedge %}

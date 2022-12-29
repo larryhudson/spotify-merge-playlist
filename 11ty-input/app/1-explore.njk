@@ -3,6 +3,7 @@ title: 1. Explore genres
 stepNum: 1
 ---
 
+{% edge 'njk' %}
 <p>
     Click '+ add' on the genres you're interested in. Click on a genre to find out more and to explore similar.
 </p>
@@ -17,12 +18,24 @@ stepNum: 1
         Chosen genres
     </h3>
     <button @click="clearAllGenres" v-if="chosenGenres.length > 0" style="display: inline-block">× Clear all</button>
-    <ul class="genres" v-if="chosenGenres.length > 0">
-        <li class="chosen" v-for="genre in chosenGenres">
-            {% include 'genre-card.njk' %}
-        </li>
+    <ul class="genres">
+        {% set chosenGenres = eleventy.edge.cookies.chosenGenres|commaStrToArray %} <pre>{{ chosenGenres|dump(2) }}</pre>
+        {% for genre in chosenGenres %}
+            <li class="chosen">
+                <a href="/app/genre/?genre={{ genre }}">
+                    <span class="genre-name">{{ genre }}</span>
+                </a>
+                <form action="/toggle-genre">
+                    <button name="genre" value="{{ genre }}">
+                        × remove
+                    </button>
+                    <input type="hidden" name="action" value="remove"/>
+                    <input type="hidden" name="return_to" value="{{ requestUrl }}"/>
+                </form>
+            </li>
+        {% endfor %}
     </ul>
-    <p v-else="">
+    <p>
         You haven't chosen any genres yet. Check out your top genres and explore similar genres above.
     </p>
 </div>
@@ -80,3 +93,4 @@ stepNum: 1
         }
     })
 </script>
+{% endedge %}

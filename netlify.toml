@@ -89,3 +89,7 @@
 [[edge_functions]]
   function = "eleventy-edge"
   path = "/app/*"
+
+[[edge_functions]]
+  function = "toggle-genre"
+  path = "/toggle-genre"
