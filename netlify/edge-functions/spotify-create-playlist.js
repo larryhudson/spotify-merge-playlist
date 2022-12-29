@@ -109,7 +109,7 @@ export default async function (request, context) {
     const genrePlaylists = await Promise.all(
       genres.map((genreName) =>
         findPlaylistsForGenre({
-          genre: genreName,
+          genreName,
           spotifyAccessToken,
         })
       )
