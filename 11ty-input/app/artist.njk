@@ -8,13 +8,10 @@ backLinkUrl: /app/1-explore/
 <div id="artist-detail-app" @vue:mounted="init">
     {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--blue-8)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
     <p>
-        <a
-            class="button button-generous button-secondary"
-            :href="`https://open.spotify.com/artist/${artistId}`"
-            target="_blank">View artist on
-                                                Spotify &rarr;</a>
+        <a class="button button-secondary" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
+            Spotify &rarr;</a>
     </p>
-    <h3>Genres for this artist</h3>
+    <h3 style="margin-top: 1rem">Genres for this artist</h3>
     <ul class="pills" v-if="'genres' in artistData">
         {% for genre in artist.genres %}
             <li style="display: inline-block">

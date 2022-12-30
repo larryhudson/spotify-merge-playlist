@@ -6,21 +6,20 @@ stepNum: 1
 <p>
     Click '+ add' on the genres you're interested in. Click on a genre to find out more and to explore similar.
 </p>
-<p style="margin-top: 2rem">
+<p style="margin-top: 1rem">
     <a href="/app/top-genres/" class="button button-generous">Explore top genres &rarr;</a>
-</p>
-<p style="margin-top: 2rem">
     <a href="/app/search/" class="button button-generous">Search by artist &rarr;</a>
 </p>
+<p style="margin-top: 1rem"></p>
 <div id="chosen-genres-app" hidden="" :hidden="false" @vue:mounted="init">
-    <h3 style="display: inline-block">
+    <h3 style="display: inline-block; margin-top: 1rem">
         Your mix
     </h3>
     <button class="button-secondary" @click="clearAllGenres" v-if="chosenGenres.length > 0" style="display: inline-block">×
         Clear all genres</button>
     <p>These genres will be included in your mix playlist.</p>
     <ul class="genres" v-if="chosenGenres.length > 0">
-        <li class="chosen-on-explore-page" v-for="genre in chosenGenres">
+        <li class="primary-highlight-subtle" v-for="genre in chosenGenres">
             {% include 'genre-card.njk' %}
         </li>
     </ul>

@@ -408,7 +408,14 @@ label p {
   border-radius: 8px;
   padding: 1rem;
   position: relative;
+
+  --border-color: var(--secondary-button-border);
 }
+
+.genres li.primary-highlight-subtle {
+  --border-color: var(--highlight-primary-subtle-border);
+}
+
 .genres .artist-count {
   position: absolute;
   top: 3px;
@@ -577,8 +584,15 @@ label p:last-child {
   flex-grow: 1;
 }
 
+.step-nav li:first-child a {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
 .step-nav li:last-child a {
   border-right: 2px solid var(--border-color);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .step-nav a[aria-current] {
