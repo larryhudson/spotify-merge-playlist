@@ -82,8 +82,9 @@ backLinkUrl: /app/3-create/
                 x-model="chosenValue"
                 :max="filterType === 'tempo' ? '500' : '0.95'"
                 :step="filterType === 'tempo' ? '10' : '0.025'"
-                :min="filterType === 'tempo' ? '60' : '0.1'"/>
-            <span x-text="chosenValue" style="margin-left: 1rem"></span>
+                :min="filterType === 'tempo' ? '60' : '0.1'"
+                style="font-size: 1.25rem"/>
+            <span x-text="chosenValue" style="margin-left: 1rem; font-size: 1.25rem;"></span>
         </p>
         <p>
             <div style="position: relative">
@@ -91,8 +92,8 @@ backLinkUrl: /app/3-create/
                     x-model="trackSearchInput"
                     @input.debounce="getSearchResults"
                     type="text"
-                    :placeholder="`search for a song to look up its ${filterType}`"
-                    style="width: 20rem"/>
+                    :placeholder="`search to find ${filterType} of a song`"
+                    style="width: 21rem; font-size: 1.125rem"/>
                 <template x-if="trackSearchResults.length > 0">
                     <ul class="search-results-dropdown">
                         <template x-for="result in trackSearchResults">
