@@ -18,7 +18,7 @@ backLinkUrl: /app/1-explore/
                 <a
                     class="pill-link button button-secondary"
                     :class="{'primary-highlight-subtle': isChoosing('{{ genre }}')}"
-                    href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
+                    href="/app/genre/?genre={{ genre | urlencode }}">{{ genre }}</a>
             </li>
         {% endfor %}
     </ul>

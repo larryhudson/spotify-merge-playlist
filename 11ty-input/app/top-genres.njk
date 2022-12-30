@@ -22,7 +22,7 @@ backLinkUrl: /app/1-explore/
             {% set genresToShow = topGenres | arrSlice(0, 10) %}
             {% for genre in genresToShow %}
                 <li>
-                    <a class="no-underline" href="/app/genre/?genre={{ genre.name }}">
+                    <a class="no-underline" href="/app/genre/?genre={{ genre.name | urlencode }}">
                         <span class="genre-name">{{ genre.name }} &rarr;</span>
                         <span class="artist-count" title="{{ genre.count }} of your top artists">{{ genre.count }}×</span>
                     </a>
@@ -36,7 +36,7 @@ backLinkUrl: /app/1-explore/
             <div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
                 <ul class="genres">
                     <li v-for="genre in genresToShow" :class="{'primary-highlight-subtle': isChoosing(genre.name)}">
-                        <a class="no-underline" :href="`/app/genre/?genre=${genre.name}`">
+                        <a class="no-underline" :href="`/app/genre/?genre=${encodeURIComponent(genre.name)}`">
                             <span class="genre-name">${genre.name} &rarr;</span>
                             <span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
                         </a>

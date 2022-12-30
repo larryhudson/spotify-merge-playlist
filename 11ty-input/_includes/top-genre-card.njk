@@ -1,4 +1,4 @@
-<a :href="`/app/genre/?genre=${genre.name}`">
+<a :href="`/app/genre/?genre=${encodeURIComponent(genre.name)}`">
     <span class="genre-name">${genre.name}</span>
     <span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
 </a>

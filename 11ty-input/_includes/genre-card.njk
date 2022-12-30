@@ -1,4 +1,4 @@
-<a :href="`/app/genre/?genre=${genre}`" class="no-underline">
+<a :href="`/app/genre/?genre=${encodeURIComponent(genre)}`" class="no-underline">
     <span class="genre-name">${genre} &rarr;</span>
 </a>
 <button class="toggle-button" @click="toggleGenre(genre)">
