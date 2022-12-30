@@ -149,7 +149,7 @@ backLinkUrl: /app/1-explore/
         this.playingTrack = null;
     }
     import {createApp} from "/petite-vue.es.js";
-    document.querySelector('h2').innerText = "{{ genre.name }}"
+    document.querySelector('h2').innerText = "{{ genre.name | safe }}"
     createApp({
         chosenGenres: [],
         updatePreviewPlaylist,
@@ -159,7 +159,7 @@ backLinkUrl: /app/1-explore/
         playlistsForGenre: {{ genre.playlists | jsonToJs | safe }},
         similarGenres: {{ genre.similarGenres | jsonToJs | safe }},
         artistsForGenre: {{ genre.artists | jsonToJs | safe }},
-        genreName: "{{ genre.name }}",
+        genreName: "{{ genre.name | safe }}",
         init,
         toggleGenre,
         fetched: false,
