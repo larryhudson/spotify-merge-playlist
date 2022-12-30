@@ -47,13 +47,9 @@ backLinkUrl: /app/3-create/
                 <template x-for="(filter, filterIndex) in chosenFilters">
                     <li>
                         <span x-text="filter.filterType"></span>
-                        is same as or
+                        is
                         <span x-text="filter.condition"></span>
-                        <span x-text="filter.track.name"></span>
-                        by
-                        <span x-text="filter.track.artists"></span>
-                        (value:
-                        <span x-text="filter.value"></span>)
+                        <span x-text="filter.value"></span>
                         <button @click="removeFilter(filterIndex)">remove</button>
                     </li>
                 </template>
@@ -72,7 +68,7 @@ backLinkUrl: /app/3-create/
                 </select>
             </div>
         </p>
-        <p>to be the same as or
+        <p>to be
             <div class="select-container">
                 <select style="margin-left: 0.5rem" x-model="condition">
                     <option value="more than">more than</option>
@@ -80,33 +76,37 @@ backLinkUrl: /app/3-create/
                 </select>
             </div>
         </p>
+        <p style="display: flex; align-items: center;">
+            <input
+                type="range"
+                x-model="chosenValue"
+                :max="filterType === 'tempo' ? '500' : '0.95'"
+                :step="filterType === 'tempo' ? '10' : '0.025'"
+                :min="filterType === 'tempo' ? '60' : '0.1'"/>
+            <span x-text="chosenValue" style="margin-left: 1rem"></span>
+        </p>
         <p>
-            <template x-if="chosenTrack">
-                <div class="filter-chosen-track">
-                    <span x-text="chosenTrack.name"></span>
-                    by
-                    <span x-text="chosenTrack.artists"></span>
-                    <button @click="chosenTrack = null">× unset</button>
-                </div>
-            </template>
-            <template x-if="chosenTrack === null">
-                <div style="position: relative">
-                    <input x-model="trackSearchInput" @input.debounce="getSearchResults" type="text" placeholder="search for a song here"/>
-                    <template x-if="trackSearchResults.length > 0">
-                        <ul class="search-results-dropdown">
-                            <template x-for="result in trackSearchResults">
-                                <li>
-                                    <button :data-track-id="result.id" @click.prevent="setChosenTrack(result)">
-                                        <span x-text="result.name"></span>
-                                        by
-                                        <span x-text="result.artists"></span>
-                                    </button>
-                                </li>
-                            </template>
-                        </ul>
-                    </template>
-                </div>
-            </template>
+            <div style="position: relative">
+                <input
+                    x-model="trackSearchInput"
+                    @input.debounce="getSearchResults"
+                    type="text"
+                    :placeholder="`search for a song to look up its ${filterType}`"
+                    style="width: 20rem"/>
+                <template x-if="trackSearchResults.length > 0">
+                    <ul class="search-results-dropdown">
+                        <template x-for="result in trackSearchResults">
+                            <li>
+                                <button :data-track-id="result.id" @click.prevent="setValueOfTrack(result)">
+                                    <span x-text="result.name"></span>
+                                    by
+                                    <span x-text="result.artists"></span>
+                                </button>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
         </div>
     </p>
     <button>Add filter</button>
@@ -142,17 +142,10 @@ async function removeFilter(filterIndex) {
 }
 async function addFilter() {
     // fetch features for track
-    const features = await fetch(`/spotify-track-features?trackId=${
-        this.chosenTrack.id
-    }`).then(r => r.json());
-    console.log({features});
-    const {filterType, condition} = this;
-    const value = features[this.filterType];
-    console.log({value});
     const filterObj = {
-        filterType,
-        condition,
-        value,
+        filterType: this.filterType,
+        condition: this.condition,
+        value: this.chosenValue,
         track: this.chosenTrack
     }
     console.log(filterObj);
@@ -162,12 +155,21 @@ async function addFilter() {
 async function updateFiltersInLocalStorage() {
     localStorage.setItem('chosen-filters', JSON.stringify(this.chosenFilters));
 }
-async function setChosenTrack(track) {
+async function setValueOfTrack(track) {
     console.log("should set track")
     console.log(track.name);
-    this.chosenTrack = track;
     this.trackSearchInput = "";
     this.trackSearchResults = [];
+    const features = await fetch(`/spotify-track-features?trackId=${
+        track.id
+    }`).then(r => r.json());
+    console.log({features});
+    const {filterType, condition} = this;
+    const value = features[this.filterType];
+    const roundedValue = this.filterType === "tempo"
+        ? Number(value.toFixed(0))
+        : Number(value.toFixed(3))
+    this.chosenValue = roundedValue;
 }
 import Alpine from "/alpine.es.js";
 document.addEventListener('alpine:init', () => {
@@ -182,10 +184,10 @@ document.addEventListener('alpine:init', () => {
         removeFilter,
         loadChosenFilters,
         getSearchResults,
-        chosenTrack: null,
-        setChosenTrack,
         trackSearchInput: "",
-        trackSearchResults: []
+        trackSearchResults: [],
+        chosenValue: 0.5,
+        setValueOfTrack
     }))
 })
 Alpine.start()</script>
