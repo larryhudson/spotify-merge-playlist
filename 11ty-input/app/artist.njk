@@ -12,14 +12,14 @@ backLinkUrl: /app/1-explore/
             class="button button-generous button-secondary"
             :href="`https://open.spotify.com/artist/${artistId}`"
             target="_blank">View artist on
-                        Spotify &rarr;</a>
+                                                Spotify &rarr;</a>
     </p>
     <h3>Genres for this artist</h3>
     <ul class="pills" v-if="'genres' in artistData">
         {% for genre in artist.genres %}
             <li style="display: inline-block">
                 <a
-                    class="pill-link button"
+                    class="pill-link button button-secondary"
                     :class="{'primary-highlight-subtle': isChoosing('{{ genre }}')}"
                     href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
             </li>
@@ -66,7 +66,7 @@ backLinkUrl: /app/1-explore/
         <ul class="pills">
             {% for relatedArtist in artist.related %}
                 <li style="display: inline-block">
-                    <a class="pill-link button" href="/app/artist/?artistId={{ relatedArtist.id }}">{{ relatedArtist.name }}</a>
+                    <a class="pill-link button button-secondary" href="/app/artist/?artistId={{ relatedArtist.id }}">{{ relatedArtist.name }}</a>
                 </li>
             {% endfor %}
         </ul>

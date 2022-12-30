@@ -770,7 +770,7 @@ h2 + h3 {
 .track-preview-button[aria-pressed] {
   z-index: 2;
 
-  outline: 4px solid var(--blue-2);
+  outline: 4px solid var(--accent-secondary);
   /* outline-offset: 2px; */
 }
 
@@ -788,8 +788,8 @@ h2 + h3 {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
-  background-color: var(--blue-2);
-  color: var(--blue-9);
+  background-color: var(--accent-secondary);
+  color: var(--paper);
 }
 
 .playing-track {
