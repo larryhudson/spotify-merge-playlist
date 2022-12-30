@@ -16,7 +16,6 @@ function routeGetTopGenres(request, context) {
 }
 
 function routeGetGenreData(request, context) {
-  console.log("doing the genre thing?");
   return getGenreData({
     spotifyAccessToken: context.cookies.get("spotify-access-token"),
     genreName: new URL(request.url).searchParams.get("genre"),
@@ -60,8 +59,6 @@ export async function routeGetArtistData(request, context) {
 
 export function addEdgeData(request, context, eleventyConfig) {
   const path = new URL(request.url).pathname;
-
-  console.log({ path: request.url });
 
   const dataFunctionsByPath = {
     "/app/top-genres/": {

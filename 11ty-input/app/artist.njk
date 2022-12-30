@@ -1,19 +1,27 @@
 ---
 title: Artist
+backLinkText: Back to your mix
+backLinkUrl: /app/1-explore/
 ---
 
 {% edge 'njk' %}
 <div id="artist-detail-app" @vue:mounted="init">
     {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--blue-8)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
     <p>
-        <a class="button button-generous" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
-            Spotify</a>
+        <a
+            class="button button-generous button-secondary"
+            :href="`https://open.spotify.com/artist/${artistId}`"
+            target="_blank">View artist on
+                        Spotify &rarr;</a>
     </p>
     <h3>Genres for this artist</h3>
     <ul class="pills" v-if="'genres' in artistData">
         {% for genre in artist.genres %}
             <li style="display: inline-block">
-                <a class="pill-link button" :class="{chosen: isChoosing('{{ genre }}')}" href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
+                <a
+                    class="pill-link button"
+                    :class="{'primary-highlight-subtle': isChoosing('{{ genre }}')}"
+                    href="/app/genre/?genre={{ genre }}">{{ genre }}</a>
             </li>
         {% endfor %}
     </ul>

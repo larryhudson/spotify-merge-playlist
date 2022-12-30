@@ -30,8 +30,14 @@
                             <a {% if stepNum === 3 %} aria-current="page" {% endif %} href="/app/3-create/">3. Create playlist</a>
                         </li>
                     </nav>
+                    {% if backLinkUrl %}
+                        <a class="button button-secondary" href="{{ backLinkUrl }}">&larr; {{ backLinkText }}</a>
+                    {% endif %}
                     <h2>{{ title }}</h2>
                     {{ content|safe }}
+                    {% if backLinkUrl %}
+                        <a class="button button-secondary" href="{{ backLinkUrl }}">&larr; {{ backLinkText }}</a>
+                    {% endif %}
                 </div>
             </div>
             <script type="module" src="/is-land.js"></script>

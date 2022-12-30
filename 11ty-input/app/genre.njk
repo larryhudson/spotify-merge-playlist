@@ -1,15 +1,24 @@
 ---
 title: Genre
+backLinkText: Back to your mix
+backLinkUrl: /app/1-explore/
 ---
 
 {% edge %}
 <div id="genre-detail-app" @vue:mounted="init">
-    <button class="button button-generous" @click="toggleGenre" :class="{chosen: isChoosing(genreName)}">
+    <button
+        class="button button-generous"
+        @click="toggleGenre"
+        :class="{'primary-highlight-obvious': isChoosing(genreName), 'primary-highlight-subtle': !isChoosing(genreName)}">
         <span v-if="isChoosing(genreName)">
-            × remove ${genreName} from your chosen genres
+            × remove
+            <strong>${genreName}</strong>
+            from your mix
         </span>
         <span v-else="">
-            + add ${genreName} to your chosen genres
+            + add
+            <strong>${genreName}</strong>
+            to your mix
         </span>
     </button>
     <h3>Similar genres</h3>
@@ -17,9 +26,10 @@ title: Genre
         {% for similarGenre in genre.similarGenres %}
             <li style="display: inline-block">
                 <a
-                    class="pill-link button"
-                    :class="{chosen: isChoosing('{{ similarGenre.name }}')}"
-                    href="/app/genre/?genre={{ similarGenre.name }}">{{ similarGenre.name }}</a>
+                    class="pill-link button-secondary button"
+                    :class="{'primary-highlight-subtle': isChoosing('{{ similarGenre.name }}')}"
+                    href="/app/genre/?genre={{ similarGenre.name }}">
+                    {{ similarGenre.name }}</a>
             </li>
         {% endfor %}
     </ul>
@@ -35,8 +45,8 @@ title: Genre
             </div>
         </div>
         <p>Tap a song below to hear a preview.
-            <a class="button" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View full playlist on
-                Spotify</a>
+            <a class="button button-secondary" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View
+                full playlist on Spotify &rarr;</a>
         </p>
         <div class="playing-track-container" v-if="playingTrack">
             <div class="playing-track">

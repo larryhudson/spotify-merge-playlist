@@ -4,8 +4,263 @@
   box-sizing: border-box;
 }
 
+/*! reasonable colors v0.4.0 | MIT License | https://github.com/matthewhowell/reasonable-colors */
+
+/* ******
+
+Format for CSS variables: --color-COLORNAME-SHADE
+
+Available values for COLORNAME:
+	gray,
+	rose, raspberry, red, orange, cinnamon, amber, yellow, lime,
+	chartreuse, green, emerald, aquamarine, teal, cyan, powder, sky
+	cerulean, azure, blue, indigo, violet, purple, magenta, pink
+
+Available values for SHADE:
+	1, 2, 3, 4, 5, 6
+
+Minimum contrast can be inferred by the difference between two SHADE numbers
+
+- Difference of 2: (3:1)
+- Difference of 3: (4.5:1)
+- Difference of 4: (7:1)
+
+reasonable-colors.css uses hex values. HSL, LCH, and RGB color spaces are available.
+
+For .scss friendly variable declarations, FILENAME.scss for each color space are provided.
+
+More information available at: https://www.reasonable.work/colors 
+
+****** */
+
 :root {
-  --blue-0: #d5e2f5;
+  /* gray */
+  --color-gray-1: #f6f6f6;
+  --color-gray-2: #e2e2e2;
+  --color-gray-3: #8b8b8b;
+  --color-gray-4: #6f6f6f;
+  --color-gray-5: #3e3e3e;
+  --color-gray-6: #222222;
+
+  /* rose */
+  /* hue 1 */
+  --color-rose-1: #fff7f9;
+  --color-rose-2: #ffdce5;
+  --color-rose-3: #ff3b8d;
+  --color-rose-4: #db0072;
+  --color-rose-5: #800040;
+  --color-rose-6: #4c0023;
+
+  /* raspberry */
+  /* hue 2 */
+  --color-raspberry-1: #fff8f8;
+  --color-raspberry-2: #ffdddf;
+  --color-raspberry-3: #ff426c;
+  --color-raspberry-4: #de0051;
+  --color-raspberry-5: #82002c;
+  --color-raspberry-6: #510018;
+
+  /* red */
+  /* hue 3 */
+  --color-red-1: #fff8f6;
+  --color-red-2: #ffddd8;
+  --color-red-3: #ff4647;
+  --color-red-4: #e0002b;
+  --color-red-5: #830014;
+  --color-red-6: #530003;
+
+  /* orange */
+  /* hue 4 */
+  --color-orange-1: #fff8f5;
+  --color-orange-2: #ffded1;
+  --color-orange-3: #fd4d00;
+  --color-orange-4: #cd3c00;
+  --color-orange-5: #752100;
+  --color-orange-6: #401600;
+
+  /* cinnamon */
+  /* hue 5 */
+  --color-cinnamon-1: #fff8f3;
+  --color-cinnamon-2: #ffdfc6;
+  --color-cinnamon-3: #d57300;
+  --color-cinnamon-4: #ac5c00;
+  --color-cinnamon-5: #633300;
+  --color-cinnamon-6: #371d00;
+
+  /* amber */
+  /* hue 6 */
+  --color-amber-1: #fff8ef;
+  --color-amber-2: #ffe0b2;
+  --color-amber-3: #b98300;
+  --color-amber-4: #926700;
+  --color-amber-5: #523800;
+  --color-amber-6: #302100;
+
+  /* yellow */
+  /* hue 7 */
+  --color-yellow-1: #fff9e5;
+  --color-yellow-2: #ffe53e;
+  --color-yellow-3: #9c8b00;
+  --color-yellow-4: #7d6f00;
+  --color-yellow-5: #463d00;
+  --color-yellow-6: #292300;
+
+  /* lime */
+  /* hue 8 */
+  --color-lime-1: #f7ffac;
+  --color-lime-2: #d5f200;
+  --color-lime-3: #819300;
+  --color-lime-4: #677600;
+  --color-lime-5: #394100;
+  --color-lime-6: #222600;
+
+  /* chartreuse */
+  /* hue 9 */
+  --color-chartreuse-1: #e5ffc3;
+  --color-chartreuse-2: #98fb00;
+  --color-chartreuse-3: #5c9b00;
+  --color-chartreuse-4: #497c00;
+  --color-chartreuse-5: #264500;
+  --color-chartreuse-6: #182600;
+
+  /* green */
+  /* hue 10 */
+  --color-green-1: #e0ffd9;
+  --color-green-2: #72ff6c;
+  --color-green-3: #00a21f;
+  --color-green-4: #008217;
+  --color-green-5: #004908;
+  --color-green-6: #062800;
+
+  /* emerald */
+  /* hue 11 */
+  --color-emerald-1: #dcffe6;
+  --color-emerald-2: #5dffa2;
+  --color-emerald-3: #00a05a;
+  --color-emerald-4: #008147;
+  --color-emerald-5: #004825;
+  --color-emerald-6: #002812;
+
+  /* aquamarine */
+  /* hue 12 */
+  --color-aquamarine-1: #daffef;
+  --color-aquamarine-2: #42ffc6;
+  --color-aquamarine-3: #009f78;
+  --color-aquamarine-4: #007f5f;
+  --color-aquamarine-5: #004734;
+  --color-aquamarine-6: #00281b;
+
+  /* teal */
+  /* hue 13 */
+  --color-teal-1: #d7fff7;
+  --color-teal-2: #00ffe4;
+  --color-teal-3: #009e8c;
+  --color-teal-4: #007c6e;
+  --color-teal-5: #00443c;
+  --color-teal-6: #002722;
+
+  /* cyan */
+  /* hue 14 */
+  --color-cyan-1: #c4fffe;
+  --color-cyan-2: #00fafb;
+  --color-cyan-3: #00999a;
+  --color-cyan-4: #007a7b;
+  --color-cyan-5: #004344;
+  --color-cyan-6: #002525;
+
+  /* powder */
+  /* hue 15 */
+  --color-powder-1: #dafaff;
+  --color-powder-2: #8df0ff;
+  --color-powder-3: #0098a9;
+  --color-powder-4: #007987;
+  --color-powder-5: #004048;
+  --color-powder-6: #002227;
+
+  /* sky */
+  /* hue 16 */
+  --color-sky-1: #e3f7ff;
+  --color-sky-2: #aee9ff;
+  --color-sky-3: #0094b4;
+  --color-sky-4: #007590;
+  --color-sky-5: #00404f;
+  --color-sky-6: #001f28;
+
+  /* cerulean */
+  /* hue 17 */
+  --color-cerulean-1: #e8f6ff;
+  --color-cerulean-2: #b9e3ff;
+  --color-cerulean-3: #0092c5;
+  --color-cerulean-4: #00749d;
+  --color-cerulean-5: #003c54;
+  --color-cerulean-6: #001d2a;
+
+  /* azure */
+  /* hue 18 */
+  --color-azure-1: #e8f2ff;
+  --color-azure-2: #c6e0ff;
+  --color-azure-3: #008fdb;
+  --color-azure-4: #0071af;
+  --color-azure-5: #003b5e;
+  --color-azure-6: #001c30;
+
+  /* blue */
+  /* hue 19 */
+  --color-blue-1: #f0f4ff;
+  --color-blue-2: #d4e0ff;
+  --color-blue-3: #0089fc;
+  --color-blue-4: #006dca;
+  --color-blue-5: #00386d;
+  --color-blue-6: #001a39;
+
+  /* indigo */
+  /* hue 20 */
+  --color-indigo-1: #f3f3ff;
+  --color-indigo-2: #deddff;
+  --color-indigo-3: #657eff;
+  --color-indigo-4: #0061fc;
+  --color-indigo-5: #00328a;
+  --color-indigo-6: #001649;
+
+  /* violet */
+  /* hue 21 */
+  --color-violet-1: #f7f1ff;
+  --color-violet-2: #e8daff;
+  --color-violet-3: #9b70ff;
+  --color-violet-4: #794aff;
+  --color-violet-5: #2d0fbf;
+  --color-violet-6: #0b0074;
+
+  /* purple */
+  /* hue 22 */
+  --color-purple-1: #fdf4ff;
+  --color-purple-2: #f7d9ff;
+  --color-purple-3: #d150ff;
+  --color-purple-4: #b01fe3;
+  --color-purple-5: #660087;
+  --color-purple-6: #3a004f;
+
+  /* magenta */
+  /* hue 23 */
+  --color-magenta-1: #fff3fc;
+  --color-magenta-2: #ffd7f6;
+  --color-magenta-3: #f911e0;
+  --color-magenta-4: #ca00b6;
+  --color-magenta-5: #740068;
+  --color-magenta-6: #44003c;
+
+  /* pink */
+  /* hue 24 */
+  --color-pink-1: #fff7fb;
+  --color-pink-2: #ffdcec;
+  --color-pink-3: #ff2fb2;
+  --color-pink-4: #d2008f;
+  --color-pink-5: #790051;
+  --color-pink-6: #4b0030;
+}
+
+:root {
+  /* --blue-0: #d5e2f5;
   --blue-1: #b7cced;
   --blue-2: #99b7e6;
   --blue-3: #7ba1df;
@@ -15,14 +270,74 @@
   --blue-7: #25549f;
   --blue-8: #1e4582;
   --blue-9: #173564;
-  --blue-10: #102546;
-  --blue-11: #091629;
+  --blue-8: #102546;
+  --blue-9: #091629; */
 
-  --ink: var(--blue-0);
-  --paper: var(--blue-11);
-  --accent: var(--blue-6);
+  --ink: var(--color-blue-2);
+  --paper: var(--color-blue-6);
+  --accent: var(--color-lime-2);
 
-  --border-color: var(--blue-3);
+  --button-bg: var(--paper);
+  --button-border: var(--ink);
+  --button-color: var(--ink);
+
+  --button-hover-bg: var(--color-blue-2);
+  --button-hover-border: var(--color-blue-2);
+  --button-hover-color: var(--paper);
+
+  --border-color: var(--color-blue-2);
+
+  --accent-primary: var(--color-lime-2);
+  --accent-primary-lighter: var(--color-lime-1);
+  --accent-secondary: var(--color-blue-2);
+
+  --highlight-primary-subtle-bg: var(--paper);
+  --highlight-primary-subtle-border: var(--accent-primary);
+  --highlight-primary-subtle-color: var(--accent-primary);
+
+  --highlight-primary-subtle-hover-bg: var(--accent-primary-lighter);
+  --highlight-primary-subtle-hover-border: var(--accent-primary);
+  --highlight-primary-subtle-hover-color: var(--paper);
+
+  --highlight-primary-obvious-bg: var(--accent-primary);
+  --highlight-primary-obvious-border: var(--accent-primary);
+  --highlight-primary-obvious-color: var(--paper);
+
+  --highlight-primary-obvious-hover-bg: var(--accent-primary-lighter);
+  --highlight-primary-obvious-hover-border: var(--accent-primary);
+  --highlight-primary-obvious-hover-color: var(--paper);
+
+  --highlight-secondary-bg: var(--accent-secondary);
+  --highlight-secondary-border: var(--accent-secondary);
+  --highlight-secondary-color: var(--paper);
+
+  --chosen-genre-highlight-bg: var(--color-lime-2);
+  --chosen-genre-highlight-border: var(--color-lime-2);
+  --chosen-genre-highlight-color: var(--color-lime-6);
+
+  --current-nav-bg: var(--color-blue-2);
+  --current-nav-color: var(--color-blue-6);
+  --current-nav-border: var(--color-blue-2);
+
+  --chosen-on-explore-bg: var(--paper);
+  --chosen-on-explore-color: var(--color-lime-2);
+  --chosen-on-explore-border: var(--color-lime-2);
+
+  --hyperlink-button-bg: var(--paper);
+  --hyperlink-button-border: var(--color-amber-3);
+  --hyperlink-button-color: var(--color-amber-3);
+
+  --secondary-button-bg: var(--color-blue-6);
+  --secondary-button-color: var(--color-blue-2);
+  --secondary-button-border: var(--color-blue-5);
+
+  --secondary-button-hover-bg: var(--color-blue-5);
+  --secondary-button-hover-color: var(--color-blue-1);
+  --secondary-button-hover-border: var(--color-blue-3);
+
+  --chosen-type-highlight-bg: var(--color-blue-6);
+  --chosen-type-highlight-border: var(--color-lime-2);
+  --chosen-type-highlight-color: var(--color-lime-2);
 }
 
 body {
@@ -45,18 +360,11 @@ body {
 
 .intro-page .login-link {
   font-size: 1.25rem;
-  background-color: var(--blue-1);
-  color: var(--blue-11);
   padding: 0.5rem 1rem;
   display: inline-block;
   text-decoration: none;
   font-weight: bold;
   border-radius: 10px;
-}
-
-.intro-page .login-link:hover {
-  background-color: var(--blue-5);
-  outline: 2px solid var(--blue-2);
 }
 
 .intro-page .login-link:active {
@@ -107,41 +415,6 @@ label p {
   right: 6px;
 }
 
-.genres .similar-container {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% - 0.5rem);
-  max-height: 200px;
-  overflow-y: scroll;
-  z-index: 2;
-  background-color: var(--blue-9);
-  padding: 0.5rem;
-  border-bottom: 2px solid var(--blue-0);
-}
-
-.genres .similar-container h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.genres li li {
-  background-color: var(--blue-10);
-  color: var(--ink);
-  font-size: 0.9rem;
-  padding: 0.5rem;
-
-  --border-color: var(--blue-3);
-  border-color: var(--border-color);
-}
-
-.genres li li button:hover {
-  background-color: var(--blue-8);
-}
-
 .main {
   max-width: 600px;
   margin: 0 auto;
@@ -153,8 +426,10 @@ iframe {
 
 button,
 .button {
-  background-color: inherit;
-  color: inherit;
+  --border-color: var(--button-border);
+
+  background-color: var(--button-bg);
+  color: var(--button-color);
   border-color: var(--border-color);
   font-size: inherit;
   border-style: solid;
@@ -173,35 +448,71 @@ button,
   padding: 0.5rem;
 }
 
-button:hover,
-.button:hover {
-  background-color: var(--blue-9);
-  color: var(--blue-0);
+.big-toggle-button {
+  font-size: 1.125rem;
+
+  background-color: var(--big-toggle-button-bg);
+  border-color: var(--big-toggle-button-border);
+  color: var(--big-toggle-button-color);
 }
 
-button:active,
-.button:active {
-  background-color: var(--blue-7);
+button:hover,
+.button:hover {
+  background-color: var(--button-hover-bg);
+  color: var(--button-hover-color);
+}
+
+.big-toggle-button:hover {
+  background-color: var(--big-toggle-button-hover-bg);
+  color: var(--big-toggle-button-hover-color);
 }
 
 .genres li.chosen,
 .playlist-types label.chosen,
 .pill-link.chosen,
 button[aria-pressed] {
-  background-color: var(--blue-2);
-  color: var(--blue-11);
+  background-color: var(--chosen-genre-highlight-bg);
+  color: var(--chosen-genre-highlight-color);
 
-  --border-color: var(--blue-11);
+  --border-color: var(--chosen-genre-highlight-border);
 }
 
-button.chosen {
-  background-color: var(--blue-2);
-  color: var(--blue-11);
-  border-color: var(--blue-2);
+.playlist-types label.chosen {
+  background-color: var(--chosen-type-highlight-bg);
+  color: var(--chosen-type-highlight-color);
+  --border-color: var(--chosen-type-highlight-border);
+
+  accent-color: var(--chosen-type-highlight-border);
+}
+
+button.secondary[aria-pressed] {
+  background-color: var(--highlight-secondary-bg);
+  color: var(--highlight-secondary-color);
+  --border-color: var(--highlight-secondary-border);
+}
+
+.button-secondary {
+  --border-color: var(--secondary-button-border);
+  color: var(--secondary-button-color);
+  background-color: var(--secondary-button-bg);
+}
+
+.button-secondary:hover,
+.button-secondary:focus {
+  --border-color: var(--secondary-button-hover-border);
+  color: var(--secondary-button-hover-color);
+  background-color: var(--secondary-button-hover-bg);
+}
+
+button.chosen,
+.big-toggle-buton.chosen {
+  background-color: var(--chosen-genre-highlight-bg);
+  color: var(--chosen-genre-highlight-color);
+  border-color: var(--chosen-genre-highlight-border);
 }
 
 .chosen a {
-  color: var(--blue-11);
+  color: var(--blue-9);
 }
 
 .toggle-button {
@@ -215,6 +526,14 @@ button.chosen {
 
 a {
   color: var(--ink);
+}
+
+a.no-underline {
+  text-decoration: none;
+}
+
+a.no-underline:hover {
+  text-decoration: underline;
 }
 
 .genre-name {
@@ -244,7 +563,6 @@ label p:last-child {
 .step-nav ul {
   display: flex;
   list-style-type: none;
-  justify-content: space-between;
   padding-left: 0;
   text-align: center;
   max-width: 32rem;
@@ -254,17 +572,19 @@ label p:last-child {
   display: block;
   text-decoration: none;
   padding: 0.5rem;
-  border-radius: 10px;
   border: 2px solid var(--border-color);
+  border-right: 0;
+  flex-grow: 1;
+}
+
+.step-nav li:last-child a {
+  border-right: 2px solid var(--border-color);
 }
 
 .step-nav a[aria-current] {
-  background-color: var(--blue-2);
-  color: var(--blue-11);
-}
-
-.step-nav li {
-  width: 30%;
+  background-color: var(--current-nav-bg);
+  color: var(--current-nav-color);
+  border-color: var(--current-nav-border);
 }
 
 .alert {
@@ -296,6 +616,10 @@ input {
 h3 {
   margin-top: 3rem;
   margin-bottom: 1rem;
+}
+
+h2 + h3 {
+  margin-top: 1rem;
 }
 
 .search-results {
@@ -415,9 +739,9 @@ h3 {
   border-bottom-right-radius: 10px;
 }
 
-.button-group button[aria-pressed] {
+/* .button-group button[aria-pressed] {
   border-color: var(--blue-2);
-}
+} */
 
 .list-flex {
   display: flex;
@@ -465,7 +789,7 @@ h3 {
   border-top-right-radius: 10px;
 
   background-color: var(--blue-2);
-  color: var(--blue-11);
+  color: var(--blue-9);
 }
 
 .playing-track {
@@ -494,7 +818,46 @@ h3 {
 }
 
 .playing-track a {
-  color: var(--blue-11);
+  color: var(--blue-9);
+}
+
+.chosen-on-explore-page,
+.chosen-on-explore-page a {
+  border-color: var(--chosen-on-explore-border);
+  color: var(--chosen-on-explore-color);
+  background-color: var(--chosen-on-explore-bg);
+
+  --border-color: var(--chosen-on-explore-border);
 }
 
 /* Custom styling for select */
+
+.primary-highlight-obvious {
+  background-color: var(--highlight-primary-obvious-bg);
+  color: var(--highlight-primary-obvious-color);
+  --border-color: var(--highlight-primary-obvious-border);
+}
+
+.primary-highlight-obvious:hover,
+.primary-highlight-obvious:focus {
+  background-color: var(--highlight-primary-obvious-hover-bg);
+  color: var(--highlight-primary-obvious-hover-color);
+  --border-color: var(--highlight-primary-obvious-hover-border);
+}
+
+.primary-highlight-subtle {
+  background-color: var(--highlight-primary-subtle-bg);
+  color: var(--highlight-primary-subtle-color);
+  --border-color: var(--highlight-primary-subtle-border);
+}
+
+.primary-highlight-subtle a {
+  color: inherit;
+}
+
+.primary-highlight-subtle:hover,
+.primary-highlight-subtle:focus {
+  background-color: var(--highlight-primary-subtle-hover-bg);
+  color: var(--highlight-primary-subtle-hover-color);
+  --border-color: var(--highlight-primary-subtle-hover-border);
+}
