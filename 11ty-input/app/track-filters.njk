@@ -92,7 +92,9 @@ backLinkUrl: /app/3-create/
                     x-model="trackSearchInput"
                     @input.debounce="getSearchResults"
                     type="text"
+                    placeholder="search to find danceability of a song"
                     :placeholder="`search to find ${filterType} of a song`"
+                    class="fade-no-js"
                     style="width: 21rem; font-size: 1.125rem"/>
                 <template x-if="trackSearchResults.length > 0">
                     <ul class="search-results-dropdown">
@@ -110,7 +112,7 @@ backLinkUrl: /app/3-create/
             </div>
         </div>
     </p>
-    <button>Add filter</button>
+    <button class="fade-no-js">Add filter</button>
 </form></div><script type="module">
 // This is going to mount its own Petite Vue thing
 async function init() {}

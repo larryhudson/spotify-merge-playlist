@@ -9,13 +9,18 @@ stepNum: 2
 Tick the checkbox on the types of playlists you want to include in your
                 playlist.
 </p>
-    <div class="playlist-types" id="playlist-types-app" @vue:mounted="init" hidden="" :hidden="false"> <label v-for="(playlistType, index) in playlistTypes" :class="{chosen: isChoosing(playlistType.name)}">
-        <p>
-            <input type="checkbox" @change="toggleType(playlistType.name)" :checked="isChoosing(playlistType.name)"/>
-            <strong>${playlistType.name}</strong>
-            &ndash; ${playlistType.description}
-        </p>
-    </label>
+    <div class="playlist-types" id="playlist-types-app" @vue:mounted="init"> {% for playlistType in playlistTypes %}
+        <label class="fade-no-js" :class="{chosen: isChoosing('{{ playlistType.name }}')}">
+            <p>
+                <input
+                    type="checkbox"
+                    @change="toggleType('{{ playlistType.name }}')"
+                    :checked="isChoosing('{{ playlistType.name }}')"/>
+                <strong>{{ playlistType.name }}</strong>
+                &ndash; {{ playlistType.description }}
+            </p>
+        </label>
+    {% endfor %}
 </div>
 <p style="text-align: right">
     <a class="button button-generous" href="/app/3-create">Next step: create your playlist &rarr;</a>

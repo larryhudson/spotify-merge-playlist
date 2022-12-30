@@ -354,6 +354,22 @@ body {
   padding: 1rem;
 }
 
+.no-js .hide-no-js {
+  display: none !important;
+}
+
+.no-js .fade-no-js {
+  opacity: 0.5;
+}
+
+img {
+  background-color: var(--color-blue-5);
+}
+
+.no-js button.fade-no-js {
+  cursor: not-allowed;
+}
+
 .intro-page li {
   margin-bottom: 0.5rem;
 }
@@ -852,8 +868,10 @@ h2 + h3 {
   --border-color: var(--highlight-primary-obvious-border);
 }
 
-.primary-highlight-obvious:hover,
-.primary-highlight-obvious:focus {
+a.primary-highlight-obvious:hover,
+a.primary-highlight-obvious:focus,
+button.primary-highlight-obvious:hover,
+button.primary-highlight-obvious:focus {
   background-color: var(--highlight-primary-obvious-hover-bg);
   color: var(--highlight-primary-obvious-hover-color);
   --border-color: var(--highlight-primary-obvious-hover-border);
@@ -869,8 +887,10 @@ h2 + h3 {
   color: inherit;
 }
 
-.primary-highlight-subtle:hover,
-.primary-highlight-subtle:focus {
+a.primary-highlight-subtle:hover,
+a.primary-highlight-subtle:focus,
+button.primary-highlight-subtle:hover,
+button.primary-highlight-subtle:focus {
   background-color: var(--highlight-primary-subtle-hover-bg);
   color: var(--highlight-primary-subtle-hover-color);
   --border-color: var(--highlight-primary-subtle-hover-border);

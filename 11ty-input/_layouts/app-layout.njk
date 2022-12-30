@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
     <head>
         <meta charset="UTF-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,6 +8,12 @@
         <link rel="stylesheet" href="/css/custom-select.css"/>
         <link rel="stylesheet" href="/css/style.css"/>
         <meta name="description" content="Create big Spotify playlists based on your favourite genres"/>
+        <script>
+            document
+                .documentElement
+                .classList
+                .remove('no-js');
+        </script>
     </head>
     <body>
         <h1>discover-mix</h1>
@@ -33,7 +39,9 @@
                     {% if backLinkUrl %}
                         <a class="button button-secondary" href="{{ backLinkUrl }}">&larr; {{ backLinkText }}</a>
                     {% endif %}
-                    <h2>{{ title }}</h2>
+                    {% if not hideTitleInLayout %}
+                        <h2>{{ title }}</h2>
+                    {% endif %}
                     {{ content|safe }}
                     {% if backLinkUrl %}
                         <a class="button button-secondary" href="{{ backLinkUrl }}">&larr; {{ backLinkText }}</a>

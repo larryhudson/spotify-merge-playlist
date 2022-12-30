@@ -2,13 +2,15 @@
 title: Artist
 backLinkText: Back to your mix
 backLinkUrl: /app/1-explore/
+hideTitleInLayout: true
 ---
 
 {% edge 'njk' %}
+<h2>{{ artist.name }}</h2>
 <div id="artist-detail-app" @vue:mounted="init">
-    {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--blue-8)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
+    {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--color-blue-5)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
     <p>
-        <a class="button button-secondary" :href="`https://open.spotify.com/artist/${artistId}`" target="_blank">View artist on
+        <a class="button button-secondary" href="https://open.spotify.com/artist/{{ artist.id }}" target="_blank">View artist on
             Spotify &rarr;</a>
     </p>
     <h3 style="margin-top: 1rem">Genres for this artist</h3>
@@ -27,18 +29,18 @@ backLinkUrl: /app/1-explore/
         <p>Tap a song below to hear a preview.</p>
         <div>
             <ul class="list-flex flex-wrap track-previews">
-                <li v-for="track in artistData.topTracks">
-                    <button
-                        :title="`${track.name} by ${track.artistStr}`"
-                        class="track-preview-button"
-                        @click="playTrack(track)"
-                        :aria-pressed="playingTrack === track ? 'true' : undefined">
-                        <img :src="track.imageUrl" :width="track.imageWidth" :height="track.imageWidth" alt=""/>
-                    </button>
-                </li>
+                {% for track in artist.topTracks %}
+                    <li>
+                        <form action="https://open.spotify.com/track/{{ track.id }}">
+                            <button title="{{ track.name }} by {{ track.artistStr }}" class="track-preview-button" @click.prevent="playTrack('{{ track.id }}')" :aria-pressed="playingTrackId === '{{ track.id }}' ? 'true' : undefined">
+                                <img src="{{ track.imageUrl }}" width="{{ track.imageWidth }}" height="{{ track.imageWidth }}" alt=""/>
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
-        <div class="playing-track-container" v-if="playingTrack !== null">
+        <div class="playing-track-container hide-no-js" v-if="playingTrackId !== null">
             <div class="playing-track">
                 <div class="image-and-name">
                     <div>
@@ -54,7 +56,7 @@ backLinkUrl: /app/1-explore/
                     </div>
                 </div>
                 <div class="stop-button">
-                    <button @click="playingTrack = null">× Stop</button>
+                    <button @click="playingTrackId = null">× Stop</button>
                 </div>
                 <audio @loadedMetadata="playAudio" id="preview-audio" :src="playingTrack.mp3Url"></audio>
             </div>
@@ -73,16 +75,12 @@ backLinkUrl: /app/1-explore/
     // This is going to mount its own Petite Vue thing
     async function init() {
         loadChosenGenres.bind(this)();
-        getArtistData.bind(this)();
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
     }
     async function getArtistData() {
-        const artistData = {{ artist | jsonToJs | safe }};
-        this.artistData = artistData;
         document.querySelector('h2').innerText = artistData.name
-        this.fetched = true;
     }
     async function loadChosenGenres() {
         const chosenGenresJson = localStorage.getItem('chosen-genres') || "[]";
@@ -94,26 +92,30 @@ backLinkUrl: /app/1-explore/
             // TODO: show error message?
         }
     }
-    async function playTrack(track) {
-        console.log("should play track", track)
-        this.playingTrack = track;
+    async function playTrack(trackId) {
+        console.log("should play track", trackId)
+        this.playingTrackId = trackId;
     }
     async function playAudio(event) {
         event.target.play();
     }
     import {createApp} from "/petite-vue.es.js";
     const artistId = new URL(window.location).searchParams.get('artistId');
-    document.querySelector('h2').innerText = "Loading..."
     createApp({
         chosenGenres: [],
         isChoosing(genre) {
             return this.chosenGenres.includes(genre)
         },
         artistId,
-        artistData: {},
-        fetched: false,
+        artistData: {{ artist | jsonToJs | safe }},
         init,
-        playingTrack: null,
+        playingTrackId: null,
+        get playingTrack() {
+            return this
+                .artistData
+                .topTracks
+                .find(t => t.id === this.playingTrackId)
+        },
         playTrack,
         playAudio,
         $delimiters: ["${", "}"]

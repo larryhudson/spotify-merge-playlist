@@ -2,22 +2,24 @@
 title: Genre
 backLinkText: Back to your mix
 backLinkUrl: /app/1-explore/
+hideTitleInLayout: true
 ---
 
 {% edge %}
+<h2>{{ genre.name }}</h2>
 <div id="genre-detail-app" @vue:mounted="init">
     <button
-        class="button button-generous"
+        class="button button-generous fade-no-js"
         @click="toggleGenre"
         :class="{'primary-highlight-obvious': isChoosing(genreName), 'primary-highlight-subtle': !isChoosing(genreName)}">
-        <span v-if="isChoosing(genreName)">
+        <span class="hide-no-js" v-if="isChoosing(genreName)">
             × remove
-            <strong>${genreName}</strong>
+            <strong>{{ genre.name }}</strong>
             from your mix
         </span>
         <span v-else="">
             + add
-            <strong>${genreName}</strong>
+            <strong>{{ genre.name }}</strong>
             to your mix
         </span>
     </button>
@@ -36,7 +38,7 @@ backLinkUrl: /app/1-explore/
     <div>
         <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
             <h3 style="margin-top: 0">Explore what is in this genre</h3>
-            <div class="select-container">
+            <div class="select-container hide-no-js">
                 <select style="display: inline-block" @change="updatePreviewPlaylist">
                     {% for playlist in genre.playlists %}
                         <option value="{{ playlist.id }}">{{ playlist.type }}</option>
@@ -45,10 +47,13 @@ backLinkUrl: /app/1-explore/
             </div>
         </div>
         <p>Tap a song below to hear a preview.
-            <a class="button button-secondary" target="_blank" :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View
-                full playlist on Spotify &rarr;</a>
+            <a
+                class="button button-secondary"
+                target="_blank"
+                href="https://open.spotify.com/playlist/${{ genre.soundPlaylistId }}"
+                :href="`https://open.spotify.com/playlist/${previewPlaylistId}`">View full playlist on Spotify &rarr;</a>
         </p>
-        <div class="playing-track-container" v-if="playingTrack">
+        <div class="playing-track-container hide-no-js" v-if="playingTrack">
             <div class="playing-track">
                 <div class="image-and-name">
                     <div>
@@ -71,14 +76,25 @@ backLinkUrl: /app/1-explore/
             </div>
         </div>
         <div>
-            <ul class="list-flex flex-wrap track-previews">
+            <ul class="list-flex flex-wrap track-previews initial-pre-js">
+                {% for track in genre.soundPlaylistTracks %}
+                    <li>
+                        <form action="https://open.spotify.com/track/{{ track.id }}">
+                            <button title="{{ track.name }} by {{ track.artistStr }}" class="track-preview-button">
+                                <img loading="lazy" src="{{ track.imageUrl }}" width="{{ track.imageWidth }}" height="{{ track.imageWidth }}" alt=""/>
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="list-flex flex-wrap track-previews hide-no-js">
                 <li v-for="track in previewTracks">
                     <button
                         :title="`${track.name} by ${track.artistStr}`"
                         class="track-preview-button"
-                        @click="playTrack(track)"
-                        :aria-pressed="playingTrack === track ? 'true' : undefined">
-                        <img :src="track.imageUrl" :width="track.imageWidth" :height="track.imageWidth" alt=""/>
+                        @click="playTrack(track.id)"
+                        :aria-pressed="playingTrackId === track.id ? 'true' : undefined">
+                        <img loading="lazy" :src="track.imageUrl" :width="track.imageWidth" :height="track.imageWidth" alt=""/>
                     </button>
                 </li>
             </ul>
@@ -106,6 +122,10 @@ backLinkUrl: /app/1-explore/
     async function init() {
         loadChosenGenres.bind(this)();
         // getPlaylistsForGenre.bind(this)(); getSimilarGenres.bind(this)(); getArtistsForGenre.bind(this)();
+        document.querySelectorAll('.initial-pre-js').forEach((element) => {
+            console.log(element);
+            element.remove();
+        })
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
@@ -137,16 +157,16 @@ backLinkUrl: /app/1-explore/
             this.chosenGenres.push(this.genreName);
         } updateChosenGenresInLocalStorage.bind(this)();
     }
-    async function playTrack(track) {
-        console.log("should play track", track)
-        this.playingTrack = track;
+    async function playTrack(trackId) {
+        console.log("should play track", trackId)
+        this.playingTrackId = trackId;
     }
     async function playAudio(event) {
         console.log(event);
         event.target.play();
     }
     async function stopPlaying() {
-        this.playingTrack = null;
+        this.playingTrackId = null;
     }
     import {createApp} from "/petite-vue.es.js";
     document.querySelector('h2').innerText = "{{ genre.name | safe }}"
@@ -163,8 +183,11 @@ backLinkUrl: /app/1-explore/
         init,
         toggleGenre,
         fetched: false,
-        playingTrack: null,
+        playingTrackId: null,
         playTrack,
+        get playingTrack() {
+            return this.previewTracks.find(t => t.id === this.playingTrackId)
+        },
         playAudio,
         stopPlaying,
         isChoosing(genreName) {
