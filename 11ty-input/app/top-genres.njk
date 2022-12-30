@@ -36,8 +36,8 @@ backLinkUrl: /app/1-explore/
             <div id="top-genres-app" hidden="" :hidden="false" @vue:mounted="init">
                 <ul class="genres">
                     <li v-for="genre in genresToShow" :class="{'primary-highlight-subtle': isChoosing(genre.name)}">
-                        <a :href="`/app/genre/?genre=${genre.name}`">
-                            <span class="genre-name">${genre.name}</span>
+                        <a class="no-underline" :href="`/app/genre/?genre=${genre.name}`">
+                            <span class="genre-name">${genre.name} &rarr;</span>
                             <span class="artist-count" :title="`${genre.count} of your top artists`">${genre.count}×</span>
                         </a>
                         <button class="toggle-button" @click="toggleGenre(genre.name)">
