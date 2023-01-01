@@ -7,7 +7,7 @@ stepNum: 1
     Click '+ add' on the genres you're interested in. Click on a genre to find out more and to explore similar.
 </p>
 <p style="margin-top: 1rem">
-    <a href="/app/top-genres/" class="button button-generous">Explore top genres &rarr;</a>
+    <a href="/app/top-genres/?timeRange=medium_term" class="button button-generous">Explore top genres &rarr;</a>
     <a href="/app/search/" class="button button-generous">Search by artist &rarr;</a>
 </p>
 <p style="margin-top: 1rem"></p>
@@ -20,7 +20,7 @@ stepNum: 1
         @click="clearAllGenres"
         v-if="chosenGenres.length > 0"
         style="display: inline-block">×
-                        Clear all genres</button>
+                                Clear all genres</button>
     <p>These genres will be included in your mix playlist.</p>
     <ul class="genres hide-no-js" v-if="chosenGenres.length > 0">
         <li class="primary-highlight-subtle" v-for="genre in chosenGenres">

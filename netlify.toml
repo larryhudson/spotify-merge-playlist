@@ -12,6 +12,11 @@
   to = "/app/1-explore/"
   status = 301
 
+[[redirects]]
+  from = "/app/top-genres/"
+  to = "/app/top-genres/?timeRange=medium_term"
+  status = 301
+
 [[edge_functions]]
   path = "/login"
   function = "auth-login-1-start"
@@ -29,6 +34,10 @@
   function = "auth-redirect-if-no-cookie"
 
 [[edge_functions]]
+  path = "/app/*"
+  function = "add-cache-header"
+
+[[edge_functions]]
   path = "/auth-check"
   function = "spotify-check-registered"
 
@@ -43,7 +52,6 @@
 [[edge_functions]]
   path = "/top-genres"
   function = "spotify-get-top-genres"
-
 
 [[edge_functions]]
   path = "/artists-for-genre"
