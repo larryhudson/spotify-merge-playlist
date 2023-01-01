@@ -37,6 +37,18 @@ backLinkUrl: /app/3-create/
                     sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad,
                     depressed, angry).
                 </li>
+                <li>
+                    <strong>instrumentalness</strong>
+                    &ndash; Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context.
+                    Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood
+                    the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is
+                    higher as the value approaches 1.0.
+                </li>
+                <li>
+                    <strong>acousticness</strong>
+                    &ndash; A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track
+                    is acoustic.
+                </li>
             </ul>
         </div>
     </details>
@@ -65,6 +77,8 @@ backLinkUrl: /app/3-create/
                     <option value="energy">energy</option>
                     <option value="tempo">tempo</option>
                     <option value="valence">valence</option>
+                    <option value="instrumentalness">instrumentalness</option>
+                    <option value="acousticness">acousticness</option>
                 </select>
             </div>
         </p>
