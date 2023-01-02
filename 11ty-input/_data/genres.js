@@ -27,6 +27,14 @@ async function main() {
     genres.push({ name, soundPlaylistId });
   });
 
+  if (process.env.ELEVENTY_SERVERLESS) {
+    // Infinite duration (until the next build)
+    options.duration = "*";
+    // Instead of ".cache" default because files/directories
+    // that start with a dot are not bundled by default
+    options.directory = "cache";
+  }
+
   return genres;
 }
 
