@@ -13,7 +13,7 @@ module.exports = function (eleventyConfig) {
     name: "serverless", // The serverless function name from your permalink object
     functionsDir: "./netlify/functions/",
     redirects: "netlify-toml-builders",
-    copy: [".cache", "utils"],
+    copy: [{ from: ".cache", to: "cache" }, "utils"],
   });
 
   eleventyConfig.addPlugin(EleventyEdgePlugin);
