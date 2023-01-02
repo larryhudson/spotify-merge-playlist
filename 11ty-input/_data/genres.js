@@ -5,10 +5,20 @@ async function main() {
   const everyNoiseUrl =
     "https://everynoise.com/everynoise1d.cgi?scope=all&vector=popularity";
 
-  const html = await EleventyFetch(everyNoiseUrl, {
+  let options = {
     duration: "1d",
     type: "text",
-  });
+  };
+
+  if (process.env.ELEVENTY_SERVERLESS) {
+    // Infinite duration (until the next build)
+    options.duration = "*";
+    // Instead of ".cache" default because files/directories
+    // that start with a dot are not bundled by default
+    options.directory = "cache";
+  }
+
+  const html = await EleventyFetch(everyNoiseUrl, options);
 
   const $ = cheerio.load(html);
 
@@ -26,14 +36,6 @@ async function main() {
 
     genres.push({ name, soundPlaylistId });
   });
-
-  if (process.env.ELEVENTY_SERVERLESS) {
-    // Infinite duration (until the next build)
-    options.duration = "*";
-    // Instead of ".cache" default because files/directories
-    // that start with a dot are not bundled by default
-    options.directory = "cache";
-  }
 
   return genres;
 }
