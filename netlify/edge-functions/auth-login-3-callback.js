@@ -16,7 +16,7 @@ export default async function (request, context) {
 
   const SPOTIFY_REDIRECT_URI = isDev
     ? "http://localhost:8888/callback"
-    : "https://caching--discover.mix.netlify.app/callback"; // CHANGE BACK BEFORE MERGING
+    : "https://caching--discover-mix.netlify.app/callback"; // CHANGE BACK BEFORE MERGING
   // : Deno.env.get("SPOTIFY_REDIRECT_URI");
 
   const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
