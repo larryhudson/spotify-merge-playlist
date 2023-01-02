@@ -93,4 +93,4 @@
 [[headers]]
   for = "/app/*"
   [headers.values]
-  cache-control = "max-age=604800'''
+  cache-control = "max-age=604800"
