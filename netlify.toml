@@ -89,3 +89,8 @@
 [[edge_functions]]
   function = "eleventy-edge"
   path = "/app/*"
+
+[[headers]]
+  for = "/app/*"
+  [headers.values]
+  cache-control = "max-age=604800'''
