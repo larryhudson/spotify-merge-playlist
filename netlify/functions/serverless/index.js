@@ -27,6 +27,7 @@ async function handler(event) {
       statusCode: 200,
       headers: {
         "Content-Type": "text/html; charset=UTF-8",
+        "Cache-Control": `max-age=${60 * 60 * 24 * 7}`,
       },
       body: page.content,
       ttl: 60 * 60 * 24 * 7, // 7 days
