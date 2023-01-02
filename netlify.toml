@@ -90,6 +90,12 @@
   function = "eleventy-edge"
   path = "/app/*"
 
+[[edge_functions]]
+  function = "add-cache-header"
+  path = "/app/*"
+
+
+
 [[headers]]
   for = "/app/*"
   [headers.values]
