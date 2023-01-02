@@ -64,7 +64,7 @@ hideTitleInLayout: true
                             <strong>${playingTrack.name}</strong>
                         </p>
                         <p>
-                            <a v-for="artist in playingTrack.artists" style="margin-right: 0.5rem" :href="`/app/artist/?artistId=${artist.id}`">
+                            <a v-for="artist in playingTrack.artists" style="margin-right: 0.5rem" :href="`/app/artist/${artist.id}/`">
                                 ${artist.name}</a>
                         </p>
                     </div>
@@ -106,7 +106,7 @@ hideTitleInLayout: true
     {% endif %}
     <ul class="search-results search-results-small scroll-sideways">
         {% for artist in genre.artists %}
-            <a href="/app/artist/?artistId={{ artist.id }}">
+            <a href="/app/artist/{{ artist.id }}/">
                 <div>
                     {% set lastImage = artist.images | last %} <img src="{{ lastImage.url }}" alt=""/>
                 </div>

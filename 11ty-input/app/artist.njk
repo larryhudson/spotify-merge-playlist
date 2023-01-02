@@ -52,7 +52,7 @@ permalink:
                             <strong>${playingTrack.name}</strong>
                         </p>
                         <p>
-                            <a v-for="trackArtist in playingTrack.artists" :href="`/app/artist/?artistId=${trackArtist.id}`">${trackArtist.name}</a>
+                            <a v-for="trackArtist in playingTrack.artists" :href="`/app/artist/${trackArtist.id}/`">${trackArtist.name}</a>
                         </p>
                     </div>
                 </div>
@@ -66,7 +66,7 @@ permalink:
         <ul class="pills">
             {% for relatedArtist in artist.related %}
                 <li style="display: inline-block">
-                    <a class="pill-link button button-secondary" href="/app/artist/?artistId={{ relatedArtist.id }}">{{ relatedArtist.name }}</a>
+                    <a class="pill-link button button-secondary" href="/app/artist/{{ relatedArtist.id }}/">{{ relatedArtist.name }}</a>
                 </li>
             {% endfor %}
         </ul>

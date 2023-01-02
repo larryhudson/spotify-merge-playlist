@@ -15,7 +15,7 @@ backLinkUrl: /app/1-explore/
     <div v-if="searchResults.length > 0">
         <ul class="search-results">
             <li v-for="artist in searchResults">
-                <a :href="`/app/artist/?artistId=${artist.id}`">
+                <a :href="`/app/artist/${artist.id}/`">
                     <div>
                         <img :src="artist.images.at(-2).url" alt=""/>
                     </div>
