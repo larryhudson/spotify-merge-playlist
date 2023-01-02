@@ -7,3 +7,6 @@ netlify/edge-functions/generated
 netlify/edge-functions/_generated
 .cache
 .nvm
+
+netlify/functions/serverless/**
+!netlify/functions/serverless/index.js

@@ -3,9 +3,10 @@ title: Artist
 backLinkText: Back to your mix
 backLinkUrl: /app/1-explore/
 hideTitleInLayout: true
+permalink:
+  serverless: /app/artist/:id/
 ---
 
-{% edge 'njk' %}
 <h2>{{ artist.name }}</h2>
 <div id="artist-detail-app" @vue:mounted="init">
     {% set secondLastImage = artist.images | arrAt(-2) %} <img width="150" height="150" style="max-width: 150px; height: auto; background-color: var(--color-blue-5)" v-if="'images' in artistData" src="{{ secondLastImage.url }}"/>
@@ -121,4 +122,3 @@ hideTitleInLayout: true
         $delimiters: ["${", "}"]
     }).mount("#artist-detail-app")
 </script>
-{% endedge %}
