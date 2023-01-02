@@ -28,9 +28,9 @@ export default async (request, context) => {
       "max age",
       ageForThisUrl
     );
-    response.headers.set("Cache-Control", `max-age=${ageForThisUrl}`);
+    response.headers.set("Cache-Control", `private, max-age=${ageForThisUrl}`);
   } else {
-    response.headers.set("Cache-Control", `public, max-age=${oneWeek}`);
+    response.headers.set("Cache-Control", `public, s-maxage=${oneDay}`);
   }
   return response;
 };
