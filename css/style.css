@@ -755,7 +755,8 @@ h2 + h3 {
   padding: 0.5rem 1rem;
 }
 
-.button-group form:last-child button {
+.button-group form:last-child button,
+.button-group > button:last-child {
   border-right: 2px solid var(--border-color);
 }
 
@@ -772,6 +773,12 @@ h2 + h3 {
 /* .button-group button[aria-pressed] {
   border-color: var(--blue-2);
 } */
+
+.button-group.equal > button {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 33%;
+}
 
 .list-flex {
   display: flex;
@@ -896,14 +903,14 @@ button.primary-highlight-subtle:focus {
   --border-color: var(--highlight-primary-subtle-hover-border);
 }
 
-.playing-track button {
+.playing-track-container button {
   background-color: var(--highlight-secondary-bg);
   color: var(--highlight-secondary-color);
   --border-color: var(--paper);
 }
 
-.playing-track button:hover,
-.playing-track button:focus {
+.playing-track-container button:hover,
+.playing-track-container button:focus {
   background-color: var(--paper);
   color: var(--highlight-secondary-bg);
 }

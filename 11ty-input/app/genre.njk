@@ -67,26 +67,26 @@ hideTitleInLayout: true
                             <a v-for="artist in playingTrack.artists" style="margin-right: 0.5rem" :href="`/app/artist/?artistId=${artist.id}`">
                                 ${artist.name}</a>
                         </p>
-                        <p>
-                            <button @click="playPreviousTrack">
-                                &larr; Previous track
-                            </button>
-                            <button @click="saveTrack(playingTrackId)" :disabled="savedTrackIds.includes(playingTrackId)">
-                                <span v-if="savedTrackIds.includes(playingTrackId)">Saved!</span>
-                                <span v-else="">
-                                    <strong>S</strong>
-                                    &ndash; Save track</span>
-                            </button>
-                            <button @click="playNextTrack">
-                                &rarr; Next track
-                            </button>
-                        </p>
                     </div>
                 </div>
                 <div class="stop-button">
                     <button @click="stopPlaying">× Stop</button>
                 </div>
                 <audio @loadedMetadata="playAudio" id="preview-audio" :src="playingTrack.mp3Url"></audio>
+            </div>
+            <div class="button-group equal">
+                <button class="button-generous" @click="playPreviousTrack">
+                    &larr; Prev
+                </button>
+                <button class="button-generous" @click="saveTrack(playingTrackId)" :disabled="savedTrackIds.includes(playingTrackId)">
+                    <span v-if="savedTrackIds.includes(playingTrackId)">Saved!</span>
+                    <span v-else="">
+                        <strong>S</strong>
+                        Save</span>
+                </button>
+                <button class="button-generous" @click="playNextTrack">
+                    &rarr; Next
+                </button>
             </div>
         </div>
         <div>
