@@ -760,12 +760,14 @@ h2 + h3 {
   border-right: 2px solid var(--border-color);
 }
 
-.button-group form:first-child button {
+.button-group form:first-child button,
+.button-group > button:first-child {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
-.button-group form:last-child button {
+.button-group form:last-child button,
+.button-group > button:last-child {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }
@@ -774,8 +776,12 @@ h2 + h3 {
   border-color: var(--blue-2);
 } */
 
+.button-group.equal {
+  margin: 1rem;
+}
+
 .button-group.equal > button {
-  flex-grow: 0;
+  flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 33%;
 }
