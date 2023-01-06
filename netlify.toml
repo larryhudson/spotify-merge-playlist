@@ -93,3 +93,7 @@
 [[edge_functions]]
   function = "add-cache-header"
   path = "/app/*"
+
+[[edge_functions]]
+  function = "spotify-save-track"
+  path = "/spotify-save-track"

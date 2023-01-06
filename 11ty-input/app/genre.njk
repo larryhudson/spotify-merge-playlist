@@ -7,7 +7,7 @@ hideTitleInLayout: true
 
 {% edge %}
 <h2>{{ genre.name }}</h2>
-<div id="genre-detail-app" @vue:mounted="init">
+<div id="genre-detail-app" @vue:mounted="init" @keyup="handleKeyPress">
     <button
         class="button button-generous fade-no-js"
         @click="toggleGenre"
@@ -67,6 +67,20 @@ hideTitleInLayout: true
                             <a v-for="artist in playingTrack.artists" style="margin-right: 0.5rem" :href="`/app/artist/?artistId=${artist.id}`">
                                 ${artist.name}</a>
                         </p>
+                        <p>
+                            <button @click="playPreviousTrack">
+                                &larr; Previous track
+                            </button>
+                            <button @click="saveTrack(playingTrackId)" :disabled="savedTrackIds.includes(playingTrackId)">
+                                <span v-if="savedTrackIds.includes(playingTrackId)">Saved!</span>
+                                <span v-else="">
+                                    <strong>S</strong>
+                                    &ndash; Save track</span>
+                            </button>
+                            <button @click="playNextTrack">
+                                &rarr; Next track
+                            </button>
+                        </p>
                     </div>
                 </div>
                 <div class="stop-button">
@@ -98,6 +112,7 @@ hideTitleInLayout: true
                     </button>
                 </li>
             </ul>
+            <button @click="loadMorePreviewTracks">Load more tracks</button>
         </div>
     </div>
     <h3>Artists for this genre</h3>
@@ -126,6 +141,29 @@ hideTitleInLayout: true
             console.log(element);
             element.remove();
         })
+    }
+    async function handleKeyPress(event) {
+        console.log(event)
+        if (event.key === "ArrowRight") {
+            playNextTrack.bind(this)()
+            return;
+        }
+        if (event.key === "ArrowLeft") {
+            playPreviousTrack.bind(this)()
+            return;
+        }
+        if (event.key === "s") {
+            saveTrack.bind(this)(this.playingTrackId)
+            return;
+        }
+    }
+    async function loadMorePreviewTracks() {
+        const tracks = await fetch(`/spotify-playlist-tracks?playlistId=${
+            this.previewPlaylistId
+        }&limit=24&offset=${
+            this.previewTracks.length
+        }`).then(r => r.json())
+        this.previewTracks = this.previewTracks.concat(tracks);
     }
     async function updatePreviewPlaylist(event) {
         this.previewPlaylistId = event.target.value;
@@ -161,6 +199,41 @@ hideTitleInLayout: true
         console.log("should play track", trackId)
         this.playingTrackId = trackId;
     }
+    async function playNextTrack() {
+        const currentIndex = this.previewTracks.findIndex(t => t.id === this.playingTrackId)
+        if (currentIndex === -1) 
+            return;
+        
+        const nextTrack = this.previewTracks[currentIndex + 1]
+        if (typeof nextTrack === "undefined") 
+            return;
+        
+        playTrack.bind(this)(nextTrack.id);
+    }
+    async function playPreviousTrack() {
+        const currentIndex = this.previewTracks.findIndex(t => t.id === this.playingTrackId)
+        if (currentIndex === -1) 
+            return;
+        
+        const prevTrack = this.previewTracks[currentIndex - 1]
+        if (typeof prevTrack === "undefined") 
+            return;
+        
+        playTrack.bind(this)(prevTrack.id);
+    }
+    async function saveTrack(trackId) {
+        const paramString = new URLSearchParams({trackId}).toString()
+        console.log("should save track", trackId)
+        const saved = await fetch(`/spotify-save-track?${paramString}`).then(r => r.json())
+        console.log(saved)
+        if (saved.status === "ok") {
+            this
+                .savedTrackIds
+                .push(trackId)
+                console
+                .log(this.savedTrackIds)
+        }
+    }
     async function playAudio(event) {
         console.log(event);
         event.target.play();
@@ -173,6 +246,8 @@ hideTitleInLayout: true
     createApp({
         chosenGenres: [],
         updatePreviewPlaylist,
+        loadMorePreviewTracks,
+        handleKeyPress,
         previewPlaylistId: "{{ genre.soundPlaylistId }}",
         previewTracks: {{ genre.soundPlaylistTracks | jsonToJs | safe }},
         getPlaylistTracks,
@@ -185,6 +260,10 @@ hideTitleInLayout: true
         fetched: false,
         playingTrackId: null,
         playTrack,
+        playNextTrack,
+        playPreviousTrack,
+        saveTrack,
+        savedTrackIds: [],
         get playingTrack() {
             return this.previewTracks.find(t => t.id === this.playingTrackId)
         },

@@ -15,7 +15,8 @@ export default function (request, context) {
     new URLSearchParams({
       response_type: "code",
       client_id: Deno.env.get("SPOTIFY_CLIENT_ID"),
-      scope: "playlist-modify-private playlist-read-private user-top-read",
+      scope:
+        "playlist-modify-private playlist-read-private user-top-read user-library-modify",
       redirect_uri: SPOTIFY_REDIRECT_URI,
       state: stateValue,
     }).toString();

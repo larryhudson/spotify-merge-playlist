@@ -895,3 +895,15 @@ button.primary-highlight-subtle:focus {
   color: var(--highlight-primary-subtle-hover-color);
   --border-color: var(--highlight-primary-subtle-hover-border);
 }
+
+.playing-track button {
+  background-color: var(--highlight-secondary-bg);
+  color: var(--highlight-secondary-color);
+  --border-color: var(--paper);
+}
+
+.playing-track button:hover,
+.playing-track button:focus {
+  background-color: var(--paper);
+  color: var(--highlight-secondary-bg);
+}
