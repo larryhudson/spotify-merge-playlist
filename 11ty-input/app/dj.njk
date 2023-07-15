@@ -1,0 +1,85 @@
+---
+title: DJ
+backLinkText: Back to your mix
+backLinkUrl: /app/1-explore/
+---
+
+<div id="dj-app" @vue:mounted="init">
+    <h2>Set playlist</h2>
+    <input v-model="playlistId"/>
+    <h2>Add a song</h2>
+    <input v-model="trackIdInput"/>
+    <button @click="addSong">Add song</button>
+    <h2>Sections</h2>
+    <div v-for="section in chosenSections">
+        <p>
+            <a :href="`spotify:track:${section.trackId}`">Open track in Spotify</a>
+        </p>
+        <pre>${JSON.stringify(section,null,2)}</pre>
+        <button @click="playSection(section)">Play section</button>
+        <button @click="findMatchingSongs">Find songs in same key and tempo</button>
+    </div>
+    <h2>Search results</h2>
+    <h2>Tracks</h2>
+    <div v-for="track in tracks">
+        <h3>Track ${track.id}</h3>
+        <p>
+            <a :href="`spotify:track:${track.id}`">Open in Spotify</a>
+        </p>
+        <p>This song is in key ${track.features.key}.</p>
+        <h4>Sections in key ${track.features.key}</h4>
+        <p>This song has ${getSectionsInKey(track, track.features.key).length} sections in key ${track.features.key}</p>
+        <div v-for="section in getSectionsInKey(track, track.features.key)">
+            <h5>Section</h5>
+            <button @click="addSection(section, track)">Choose section</button>
+            <pre>${JSON.stringify(section,null,2)}</pre>
+        </div>
+    </div>
+    <pre>${JSON.stringify(tracks,null,2)}</pre>
+</div>
+<script type="module">
+    async function addSong() {
+        const trackId = this.trackIdInput;
+        const trackFeatures = await fetch(`/spotify-track-features?trackId=${trackId}`).then(r => r.json())
+        const trackAnalysis = await fetch(`/spotify-track-analysis?trackId=${trackId}`)
+            .then(r => r.json())
+            this
+            .tracks
+            .push({id: trackId, features: trackFeatures, analysis: trackAnalysis})
+    }
+    function getSectionsInKey(track, key) {
+        return track
+            .analysis
+            .sections
+            .filter(s => s.key === key)
+    }
+    async function playSection(section) {
+        const searchParams = new URLSearchParams({trackId: section.trackId, position: section.start}).toString()
+        await fetch(`/spotify-play-at-position?${searchParams}`)
+    }
+    function addSection(section, track) {
+        this.chosenSections.push({
+            ... section,
+            trackId: track.id
+        });
+        window.localStorage.setItem('chosen-sections', JSON.stringify(this.chosenSections))
+    }
+    function init() {
+        const stringFromLocalStorage = window.localStorage.getItem('chosen-sections') || "[]"
+        const sections = JSON.parse(stringFromLocalStorage)
+        this.chosenSections = sections;
+    }
+    import {createApp} from "/petite-vue.es.js";
+    createApp({
+        init,
+        tracks: [],
+        chosenSections: [],
+        trackIdInput: "6u6gr3d6ZjBU79beyZcKOH",
+        playlistId: "4CvNSwKn7f9ngVLlP2Jr0O",
+        getSectionsInKey,
+        addSong,
+        addSection,
+        playSection,
+        $delimiters: ["${", "}"]
+    }).mount("#dj-app")
+</script>
