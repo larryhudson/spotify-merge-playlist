@@ -16,7 +16,7 @@ export default function (request, context) {
       response_type: "code",
       client_id: Deno.env.get("SPOTIFY_CLIENT_ID"),
       scope:
-        "playlist-modify-private playlist-read-private user-top-read user-library-modify",
+        "playlist-modify-private playlist-read-private user-top-read user-library-modify user-modify-playback-state",
       redirect_uri: SPOTIFY_REDIRECT_URI,
       state: stateValue,
     }).toString();

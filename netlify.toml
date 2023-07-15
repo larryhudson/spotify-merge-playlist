@@ -70,6 +70,14 @@
   function = "spotify-track-features"
 
 [[edge_functions]]
+  path = "/spotify-track-analysis"
+  function = "spotify-track-analysis"
+
+[[edge_functions]]
+  path = "/spotify-dj-matching-songs"
+  function = "spotify-dj-matching-songs"
+
+[[edge_functions]]
   path = "/spotify-playlist-tracks"
   function = "spotify-playlist-tracks"
 
@@ -97,3 +105,7 @@
 [[edge_functions]]
   function = "spotify-save-track"
   path = "/spotify-save-track"
+
+[[edge_functions]]
+  function = "spotify-play-at-position"
+  path = "/spotify-play-at-position"

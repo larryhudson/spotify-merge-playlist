@@ -24,6 +24,32 @@ export async function lookupTrackFeatures({ trackId, spotifyAccessToken }) {
   }
 }
 
+export async function lookupTrackAnalysis({ trackId, spotifyAccessToken }) {
+  const featuresResponse = await fetch(
+    `https://api.spotify.com/v1/audio-analysis/${trackId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      },
+    }
+  );
+
+  if (featuresResponse.ok) {
+    const featuresJson = await featuresResponse.json();
+    return featuresJson;
+  } else {
+    console.log("Error while looking up analysis", featuresId);
+    console.log("status code", featuresResponse.status);
+    console.log("status text", featuresResponse.statusText);
+    const errorText = await featuresResponse.text();
+    throw {
+      status: featuresResponse.status,
+      statusText: featuresResponse.statusText,
+      message: errorText,
+    };
+  }
+}
+
 export async function lookupMultipleTrackFeatures({
   arrayOfIds,
   spotifyAccessToken,
